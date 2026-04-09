@@ -1,0 +1,138 @@
+@model EODashboardViewModel
+@{
+    ViewData["Title"] = "EO Dashboard";
+}
+
+<h3><i class="bi bi-speedometer2"></i> Environmental Officer Dashboard</h3>
+<hr />
+
+<!-- Stats Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-2">
+        <div class="card stat-card bg-primary text-white">
+            <div class="stat-number">@Model.TotalApplications</div>
+            <div class="stat-label text-white-50">Total</div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card stat-card bg-warning text-dark">
+            <div class="stat-number">@Model.PendingReview</div>
+            <div class="stat-label">Pending Review</div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card stat-card bg-success text-white">
+            <div class="stat-number">@Model.Approved</div>
+            <div class="stat-label text-white-50">Approved</div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card stat-card bg-danger text-white">
+            <div class="stat-number">@Model.Rejected</div>
+            <div class="stat-label text-white-50">Rejected</div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card stat-card bg-info text-white">
+            <div class="stat-number">@Model.PermitsIssued</div>
+            <div class="stat-label text-white-50">Permits Issued</div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <a asp-action="ReviewApplications" class="card text-decoration-none h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-clipboard-check display-4 text-warning"></i>
+                <h5 class="mt-2">Review Applications</h5>
+                <p class="text-muted">@Model.PendingReview pending</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a asp-action="AllApplications" class="card text-decoration-none h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-list-ul display-4 text-primary"></i>
+                <h5 class="mt-2">All Applications</h5>
+                <p class="text-muted">View complete list</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a asp-controller="Report" asp-action="PermitStatusReport" class="card text-decoration-none h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-file-earmark-bar-graph display-4 text-info"></i>
+                <h5 class="mt-2">Reports</h5>
+                <p class="text-muted">Status report</p>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- Recent Applications -->
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="bi bi-clock-history"></i> Recent Applications</h5>
+    </div>
+    <div class="card-body">
+        @if (Model.RecentApplications.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Request No</th>
+                            <th>Date</th>
+                            <th>Applicant</th>
+                            <th>Permit Type</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var pr in Model.RecentApplications)
+                        {
+                            var status = pr.Statuses?.OrderByDescending(s => s.Date).FirstOrDefault()?.PermitRequestStatus ?? "Unknown";
+                            var statusClass = status switch
+                            {
+                                "Pending Payment" => "status-pending-payment",
+                                "Submitted" => "status-submitted",
+                                "Being Reviewed" => "status-being-reviewed",
+                                "Approved" => "status-approved",
+                                "Rejected" => "status-rejected",
+                                "Permit Issued" => "status-permit-issued",
+                                _ => "bg-secondary text-white"
+                            };
+                            <tr>
+                                <td><strong>@pr.RequestNo</strong></td>
+                                <td>@pr.DateOfRequest.ToString("MMM dd, yyyy")</td>
+                                <td>@pr.RequestedBy?.OrganizationName</td>
+                                <td>@pr.RequestedPermit?.PermitName</td>
+                                <td><span class="status-badge @statusClass">@status</span></td>
+                                <td>
+                                    <a asp-controller="PermitRequest" asp-action="Details" asp-route-id="@pr.RequestNo"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    @if (status == "Submitted" || status == "Being Reviewed")
+                                    {
+                                        <a asp-action="Review" asp-route-id="@pr.RequestNo"
+                                           class="btn btn-sm btn-warning">
+                                            <i class="bi bi-clipboard-check"></i> Review
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p class="text-muted text-center py-4">No applications yet.</p>
+        }
+    </div>
+</div>

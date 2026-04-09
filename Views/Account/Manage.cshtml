@@ -1,0 +1,89 @@
+@model RE
+@{
+    ViewData["Title"] = "Account Management";
+}
+
+<h3><i class="bi bi-person-gear"></i> Account Management</h3>
+<hr />
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Profile Information</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Manage" method="post">
+                    <input type="hidden" asp-for="ID" />
+                    <input type="hidden" asp-for="Password" />
+                    <input type="hidden" asp-for="CreatedDate" />
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">User ID</label>
+                            <input class="form-control" value="@Model.ID" disabled />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Account Created</label>
+                            <input class="form-control" value="@Model.CreatedDate.ToString("MMM dd, yyyy")" disabled />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="ContactPersonName" class="form-label fw-bold"></label>
+                            <input asp-for="ContactPersonName" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label fw-bold"></label>
+                            <input asp-for="Email" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="OrganizationName" class="form-label fw-bold"></label>
+                            <input asp-for="OrganizationName" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="OrganizationAddress" class="form-label fw-bold"></label>
+                            <input asp-for="OrganizationAddress" class="form-control" />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i> Save Changes
+                    </button>
+                    <a asp-action="ChangePassword" class="btn btn-outline-secondary ms-2">
+                        <i class="bi bi-key"></i> Change Password
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Activity Sites</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.Sites != null && Model.Sites.Any())
+                {
+                    @foreach (var site in Model.Sites)
+                    {
+                        <div class="border rounded p-2 mb-2">
+                            <strong><i class="bi bi-geo-alt"></i> @site.SiteAddress</strong><br />
+                            <small class="text-muted">Contact: @site.SiteContactPerson</small>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted">No sites registered yet.</p>
+                }
+                <a asp-action="AddSite" class="btn btn-sm btn-outline-primary mt-2">
+                    <i class="bi bi-plus-circle"></i> Add Site
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

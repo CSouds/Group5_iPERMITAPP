@@ -1,0 +1,129 @@
+@model REDashboardViewModel
+@{
+    ViewData["Title"] = "RE Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3><i class="bi bi-speedometer2"></i> Welcome, @Model.RE.ContactPersonName</h3>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> New Permit Application
+    </a>
+</div>
+
+<!-- Organization Info Card -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <strong>Organization:</strong> @Model.RE.OrganizationName
+            </div>
+            <div class="col-md-4">
+                <strong>Email:</strong> @Model.RE.Email
+            </div>
+            <div class="col-md-4">
+                <strong>Member Since:</strong> @Model.RE.CreatedDate.ToString("MMM dd, yyyy")
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Summary Stats -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card bg-primary text-white">
+            <div class="stat-number">@Model.PermitRequests.Count</div>
+            <div class="stat-label text-white-50">Total Applications</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card bg-warning text-dark">
+            <div class="stat-number">@Model.CurrentStatuses.Count(s => s.Value == "Pending Payment")</div>
+            <div class="stat-label">Pending Payment</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card bg-info text-white">
+            <div class="stat-number">@Model.CurrentStatuses.Count(s => s.Value == "Submitted" || s.Value == "Being Reviewed")</div>
+            <div class="stat-label text-white-50">Under Review</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card bg-success text-white">
+            <div class="stat-number">@Model.CurrentStatuses.Count(s => s.Value == "Permit Issued")</div>
+            <div class="stat-label text-white-50">Permits Issued</div>
+        </div>
+    </div>
+</div>
+
+<!-- Applications Table -->
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="bi bi-list-ul"></i> My Permit Applications</h5>
+    </div>
+    <div class="card-body">
+        @if (Model.PermitRequests.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Request No</th>
+                            <th>Date</th>
+                            <th>Permit Type</th>
+                            <th>Activity</th>
+                            <th>Fee</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var pr in Model.PermitRequests)
+                        {
+                            var status = Model.CurrentStatuses.GetValueOrDefault(pr.RequestNo, "Unknown");
+                            var statusClass = status switch
+                            {
+                                "Pending Payment" => "status-pending-payment",
+                                "Submitted" => "status-submitted",
+                                "Being Reviewed" => "status-being-reviewed",
+                                "Approved" => "status-approved",
+                                "Rejected" => "status-rejected",
+                                "Permit Issued" => "status-permit-issued",
+                                _ => "bg-secondary text-white"
+                            };
+                            <tr>
+                                <td><strong>@pr.RequestNo</strong></td>
+                                <td>@pr.DateOfRequest.ToString("MMM dd, yyyy")</td>
+                                <td>@pr.RequestedPermit?.PermitName</td>
+                                <td>@(pr.ActivityDescription.Length > 40 ? pr.ActivityDescription.Substring(0, 40) + "..." : pr.ActivityDescription)</td>
+                                <td>$@pr.PermitFee.ToString("F2")</td>
+                                <td><span class="status-badge @statusClass">@status</span></td>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@pr.RequestNo" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> View
+                                    </a>
+                                    @if (status == "Pending Payment")
+                                    {
+                                        <a asp-controller="Payment" asp-action="Pay" asp-route-requestNo="@pr.RequestNo"
+                                           class="btn btn-sm btn-warning">
+                                            <i class="bi bi-credit-card"></i> Pay
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-inbox display-1 text-muted"></i>
+                <p class="text-muted mt-3">No permit applications yet.</p>
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Submit Your First Application
+                </a>
+            </div>
+        }
+    </div>
+</div>

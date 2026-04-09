@@ -1,0 +1,78 @@
+@model PaymentViewModel
+@{
+    ViewData["Title"] = "Pay Application Fee";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <!-- OPS Payment Portal Header -->
+        <div class="alert alert-info text-center mb-4">
+            <h5><i class="bi bi-bank"></i> OPS Common Payment Portal (CPP)</h5>
+            <p class="mb-0">Secure payment processing for Ontario Public Services</p>
+        </div>
+
+        <div class="card payment-card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="bi bi-credit-card"></i> Payment Details</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <strong>Request:</strong> @Model.PermitRequestNo<br />
+                    <strong>Amount Due:</strong> <span class="fs-4 fw-bold text-success">$@Model.Amount.ToString("F2")</span>
+                </div>
+
+                <form asp-action="Pay" method="post">
+                    <input type="hidden" asp-for="PermitRequestNo" />
+                    <input type="hidden" asp-for="Amount" />
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="PaymentMethod" class="form-label"></label>
+                        <select asp-for="PaymentMethod" class="form-select">
+                            <option value="">-- Select Payment Method --</option>
+                            <option value="Visa">Visa</option>
+                            <option value="MasterCard">MasterCard</option>
+                            <option value="PayPal">PayPal</option>
+                            <option value="Debit">Debit Card</option>
+                        </select>
+                        <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="CardHolderName" class="form-label"></label>
+                        <input asp-for="CardHolderName" class="form-control" placeholder="Name on card" />
+                        <span asp-validation-for="CardHolderName" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="CardNumber" class="form-label"></label>
+                        <input asp-for="CardNumber" class="form-control" placeholder="1234567890123456" maxlength="16" />
+                        <span asp-validation-for="CardNumber" class="text-danger"></span>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="ExpiryDate" class="form-label"></label>
+                            <input asp-for="ExpiryDate" class="form-control" placeholder="MM/YY" />
+                            <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="CVV" class="form-label"></label>
+                            <input asp-for="CVV" class="form-control" placeholder="123" maxlength="3" type="password" />
+                            <span asp-validation-for="CVV" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="bi bi-lock"></i> Pay $@Model.Amount.ToString("F2")
+                        </button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-3">
+                    <small class="text-muted">
+                        <i class="bi bi-shield-lock"></i> Your payment is processed securely through the OPS Common Payment Portal.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
