@@ -6,6 +6,7 @@
 
 using Group5_iPERMITAPP.Data;
 using Group5_iPERMITAPP.Models;
+using Group5_iPERMITAPP.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,18 @@ builder.Services.AddControllersWithViews();
 // Configure SQLite database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Configure email service (switch between ConsoleEmailService for dev, SmtpEmailService for production)
+if (builder.Environment.IsDevelopment())
+{
+    // In development, emails log to console
+    builder.Services.AddScoped<IEmailService, ConsoleEmailService>();
+}
+else
+{
+    // In production, send real emails via SMTP
+    builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+}
 
 // Configure session for authentication
 builder.Services.AddDistributedMemoryCache();

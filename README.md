@@ -55,6 +55,15 @@ Then run: `./publish/Group5_iPERMITAPP.exe`
 ### Regulated Entity (RE)
 - Register a new RE account through the **Register** page
 
+## Email Configuration
+
+**Important:** Emails are fully implemented!
+
+- **Development Mode (default):** Emails log to console instead of sending
+- **Production Mode:** Real emails sent via SMTP (Gmail, SendGrid, Office365, etc.)
+
+See `EMAIL_SETUP.md` for complete configuration instructions. To test without SMTP setup, just run the app normally and watch the console for email output.
+
 ---
 
 ## Features Implemented
@@ -68,6 +77,7 @@ Then run: `./publish/Group5_iPERMITAPP.exe`
 | Manage Environmental Permits | Browse permit types, create applications |
 | Submit Applications | Fill out permit request form with activity details |
 | Fee Payment (OPS-CPP) | Simulated payment portal with card processing |
+| **Email Notifications** | **Real SMTP emails sent at payment, decision, and permit issuance** |
 | Acknowledge EO | Email notifications archived after payment |
 | Review Applications | EO reviews submitted applications |
 | Approve/Reject | EO makes decisions with recorded reasoning |

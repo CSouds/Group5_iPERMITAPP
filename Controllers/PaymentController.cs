@@ -7,6 +7,7 @@
 using Group5_iPERMITAPP.Data;
 using Group5_iPERMITAPP.Models;
 using Group5_iPERMITAPP.Models.ViewModels;
+using Group5_iPERMITAPP.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,10 +20,12 @@ namespace Group5_iPERMITAPP.Controllers
     public class PaymentController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IEmailService _emailService;
 
-        public PaymentController(ApplicationDbContext context)
+        public PaymentController(ApplicationDbContext context, IEmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         // =====================================================
@@ -126,23 +129,92 @@ namespace Group5_iPERMITAPP.Controllers
 
             _context.RequestStatuses.Add(submittedStatus);
 
-            // Create email archive entry (Acknowledge EO)
-            // This declares to the EO that the RE's payment is complete
-            var emailToEO = new EmailArchive
+            // ===== SEND EMAILS =====
+
+            // Send confirmation email to RE
+            if (permitRequest.RequestedBy != null)
+            {
+                var reEmailBody = $@"
+<html>
+<body style='font-family: Arial, sans-serif;'>
+    <h2>Payment Confirmation - iPERMIT Application</h2>
+    <p>Dear {permitRequest.RequestedBy.ContactPersonName},</p>
+    <p>Your payment for environmental permit application has been successfully processed.</p>
+
+    <div style='background-color: #f0f0f0; padding: 15px; border-left: 4px solid #0d6efd;'>
+        <strong>Application Details:</strong><br/>
+        Request Number: {model.PermitRequestNo}<br/>
+        Amount Paid: ${permitRequest.PermitFee:F2}<br/>
+        Date: {DateTime.Now:MMMM dd, yyyy}<br/>
+        Payment ID: {paymentId}
+    </div>
+
+    <p>Your application has been submitted for review by the Ministry's Environmental Officer and is now in the queue for evaluation.
+    You will receive further updates as your application progresses through the approval process.</p>
+
+    <p>You can track the status of your application by logging into the iPERMIT system at any time.</p>
+
+    <p>If you have any questions, please contact our support team.</p>
+
+    <p>Best regards,<br/>
+    iPERMIT System<br/>
+    Ontario Ministry of Environment</p>
+</body>
+</html>";
+
+                await _emailService.SendEmailAsync(
+                    permitRequest.RequestedBy.Email,
+                    permitRequest.RequestedBy.ContactPersonName,
+                    $"Payment Confirmation for iPERMIT Application {model.PermitRequestNo}",
+                    reEmailBody
+                );
+            }
+
+            // Send notification to EO (Acknowledge EO)
+            var eoEmailBody = $@"
+<html>
+<body style='font-family: Arial, sans-serif;'>
+    <h2>New Application Submitted - iPERMIT</h2>
+    <p>A new environmental permit application has been submitted and is ready for review.</p>
+
+    <div style='background-color: #f0f0f0; padding: 15px; border-left: 4px solid #0d6efd;'>
+        <strong>Application Details:</strong><br/>
+        Request Number: {model.PermitRequestNo}<br/>
+        Organization: {permitRequest.RequestedBy?.OrganizationName}<br/>
+        Permit Type: {permitRequest.RequestedPermit?.PermitName}<br/>
+        Application Fee: ${permitRequest.PermitFee:F2} (PAID)<br/>
+        Activity: {permitRequest.ActivityDescription}<br/>
+        Date Submitted: {DateTime.Now:MMMM dd, yyyy}
+    </div>
+
+    <p><a href='https://localhost:5001/EO/Review/{model.PermitRequestNo}' style='background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block;'>Review Application</a></p>
+
+    <p>Log in to the iPERMIT system to review and make a decision on this application.</p>
+</body>
+</html>";
+
+            await _emailService.SendEmailAsync(
+                "cosbdf@umsystem.edu",
+                "Environmental Officer",
+                $"New Application Ready for Review: {model.PermitRequestNo}",
+                eoEmailBody
+            );
+
+            // Create email archive entries for logging
+            var emailToEOArchive = new EmailArchive
             {
                 EmailID = "EMAIL-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-EO",
                 EmailDate = DateTime.Now,
                 Reason = $"Payment confirmed for request {model.PermitRequestNo}. Application ready for review.",
                 SentBy = "OPS-CPP",
-                SentTo = "EO",
+                SentTo = "Environmental Officer",
                 RecipientEmail = "eo@ministry.gov.on.ca",
                 PermitRequestNo = model.PermitRequestNo
             };
 
-            _context.EmailArchives.Add(emailToEO);
+            _context.EmailArchives.Add(emailToEOArchive);
 
-            // Send confirmation email to RE
-            var emailToRE = new EmailArchive
+            var emailToREArchive = new EmailArchive
             {
                 EmailID = "EMAIL-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-RE",
                 EmailDate = DateTime.Now,
@@ -153,7 +225,7 @@ namespace Group5_iPERMITAPP.Controllers
                 PermitRequestNo = model.PermitRequestNo
             };
 
-            _context.EmailArchives.Add(emailToRE);
+            _context.EmailArchives.Add(emailToREArchive);
 
             await _context.SaveChangesAsync();
 
