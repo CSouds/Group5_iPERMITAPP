@@ -1,0 +1,74 @@
+﻿@model iPERMIT_Group_5.Models.PermitRequest
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>PermitRequest</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.dateOfRequest)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.dateOfRequest)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.activityDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.activityDescription)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.activityStartDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.activityStartDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.activityDuration)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.activityDuration)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.permitFee)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.permitFee)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EnvironmentalPermits.permitName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EnvironmentalPermits.permitName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RE.contactPersonName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RE.contactPersonName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.requestNo }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

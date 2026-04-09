@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "iPERMIT Dashboard - Group 5";
+    bool isLoggedIn = Session["UserType"] != null;
+    string userType = Session["UserType"]?.ToString();
+}
+
+<h1 class="text-center">iPERMIT Dashboard</h1>
+<p class="text-center lead">Environmental Permit Management System — Group 5</p>
+
+@if (!isLoggedIn)
+{
+    <div class="text-center" style="margin: 30px 0;">
+        <a href="/Login" class="btn btn-primary btn-lg">Login</a>
+        <a href="/RE/Create" class="btn btn-success btn-lg" style="margin-left: 15px;">Register as RE</a>
+        <p class="text-muted" style="margin-top: 15px;">EO Demo: eo@ministry.gov / password</p>
+    </div>
+}
+else
+{
+    <div class="alert alert-info text-center">
+        Logged in as: <strong>@Session["UserName"]</strong> (@userType)
+        <a href="/Login/Logout" class="btn btn-default btn-sm" style="margin-left: 20px;">Logout</a>
+    </div>
+}
+
+<hr />
+
+@if (userType == "EO")
+{
+    <!-- EO Dashboard -->
+    <h2>Environmental Officer Portal</h2>
+    <div class="list-group">
+        @Html.ActionLink("Review Submitted Applications", "Index", "Decision", null, new { @class = "list-group-item" })
+        @Html.ActionLink("Issue Permits", "Index", "Permit", null, new { @class = "list-group-item" })
+        @Html.ActionLink("Update Application Status", "Index", "RequestStatus", null, new { @class = "list-group-item" })
+        @Html.ActionLink("All Issued Permits", "Index", "Permit", null, new { @class = "list-group-item" })
+    </div>
+}
+else if (userType == "RE" || isLoggedIn)
+{
+    <!-- RE Dashboard -->
+    <h2>Regulated Entity Portal</h2>
+    <div class="list-group">
+        @Html.ActionLink("Submit New Permit Application", "Create", "PermitRequest", null, new { @class = "list-group-item" })
+        @Html.ActionLink("My Applications & Status", "Index", "PermitRequest", null, new { @class = "list-group-item" })
+        @Html.ActionLink("Pay Fees", "Index", "Payment", null, new { @class = "list-group-item" })
+    </div>
+}
+else
+{
+    <!-- Default / Not logged in quick links -->
+    <div class="row">
+        <div class="col-md-6">
+            <h3>RE Quick Access</h3>
+            @Html.ActionLink("Submit Permit Application", "Create", "PermitRequest", null, new { @class = "btn btn-primary" })
+        </div>
+        <div class="col-md-6">
+            <h3>EO Quick Access</h3>
+            @Html.ActionLink("Review Applications (EO only)", "Index", "Decision", null, new { @class = "btn btn-primary" })
+        </div>
+    </div>
+}

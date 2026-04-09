@@ -1,0 +1,63 @@
+﻿@model IEnumerable<iPERMIT_Group_5.Models.RequestStatus>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.permitRequestStatus)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.updatedBy_ID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.updatedByType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PermitRequest.activityDescription)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.permitRequestStatus)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.updatedBy_ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.updatedByType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PermitRequest.activityDescription)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.RequestStatusID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.RequestStatusID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.RequestStatusID })
+        </td>
+    </tr>
+}
+
+</table>

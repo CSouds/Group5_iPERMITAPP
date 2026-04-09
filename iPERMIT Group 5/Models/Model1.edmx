@@ -1,0 +1,823 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Group5_iPERMITDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Decision">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="dateOfDecision" Type="datetime" Nullable="false" />
+          <Property Name="finalDecision" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="madeBy_EO_ID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="relatedTo_requestNo" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmailArchive">
+          <Key>
+            <PropertyRef Name="emailID" />
+          </Key>
+          <Property Name="emailID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="emailDate" Type="datetime" Nullable="false" />
+          <Property Name="reason" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="sentTo_RE_ID" Type="nvarchar" MaxLength="50" />
+          <Property Name="sentBy_ID" Type="nvarchar" MaxLength="50" />
+          <Property Name="sentByType" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="EnvironmentalPermits">
+          <Key>
+            <PropertyRef Name="permitID" />
+          </Key>
+          <Property Name="permitID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="permitName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="permitFee" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="description" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="EO">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OPS_CPP">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Payment">
+          <Key>
+            <PropertyRef Name="PaymentID" />
+          </Key>
+          <Property Name="PaymentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="paymentDate" Type="datetime" Nullable="false" />
+          <Property Name="paymentMethod" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="isApproved" Type="bit" Nullable="false" />
+          <Property Name="PermitRequest_requestNo" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="approvedBy_OPS_ID" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Permit">
+          <Key>
+            <PropertyRef Name="PermitID" />
+          </Key>
+          <Property Name="PermitID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="issueDate" Type="datetime" Nullable="false" />
+          <Property Name="issuedBy_EO_ID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="issuedTo_RE_ID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="relatedTo_requestNo" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PermitRequest">
+          <Key>
+            <PropertyRef Name="requestNo" />
+          </Key>
+          <Property Name="requestNo" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="dateOfRequest" Type="datetime" Nullable="false" />
+          <Property Name="activityDescription" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="activityStartDate" Type="datetime" Nullable="false" />
+          <Property Name="activityDuration" Type="datetime" />
+          <Property Name="permitFee" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="requestedBy_RE_ID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="requestedPermit_permitID" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RE">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="contactPersonName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="password" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="createdDate" Type="datetime" Nullable="false" />
+          <Property Name="email" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="organizationName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="organizationAddress" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RequestStatus">
+          <Key>
+            <PropertyRef Name="RequestStatusID" />
+          </Key>
+          <Property Name="RequestStatusID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="permitRequestStatus" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="date" Type="datetime" Nullable="false" />
+          <Property Name="description" Type="nvarchar" MaxLength="500" />
+          <Property Name="PermitRequest_requestNo" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="updatedBy_ID" Type="nvarchar" MaxLength="50" />
+          <Property Name="updatedByType" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="RESite">
+          <Key>
+            <PropertyRef Name="RESiteID" />
+          </Key>
+          <Property Name="RESiteID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RE_ID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="siteAddress" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="siteContactPerson" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Decision__madeBy__571DF1D5">
+          <End Role="EO" Type="Self.EO" Multiplicity="1" />
+          <End Role="Decision" Type="Self.Decision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Decision">
+              <PropertyRef Name="madeBy_EO_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Decision__relate__5812160E">
+          <End Role="PermitRequest" Type="Self.PermitRequest" Multiplicity="1" />
+          <End Role="Decision" Type="Self.Decision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PermitRequest">
+              <PropertyRef Name="requestNo" />
+            </Principal>
+            <Dependent Role="Decision">
+              <PropertyRef Name="relatedTo_requestNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__EmailArch__sentT__5DCAEF64">
+          <End Role="RE" Type="Self.RE" Multiplicity="0..1" />
+          <End Role="EmailArchive" Type="Self.EmailArchive" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RE">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EmailArchive">
+              <PropertyRef Name="sentTo_RE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Payment__approve__6477ECF3">
+          <End Role="OPS_CPP" Type="Self.OPS_CPP" Multiplicity="0..1" />
+          <End Role="Payment" Type="Self.Payment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPS_CPP">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Payment">
+              <PropertyRef Name="approvedBy_OPS_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Payment__PermitR__6383C8BA">
+          <End Role="PermitRequest" Type="Self.PermitRequest" Multiplicity="1" />
+          <End Role="Payment" Type="Self.Payment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PermitRequest">
+              <PropertyRef Name="requestNo" />
+            </Principal>
+            <Dependent Role="Payment">
+              <PropertyRef Name="PermitRequest_requestNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Permit__issuedBy__6754599E">
+          <End Role="EO" Type="Self.EO" Multiplicity="1" />
+          <End Role="Permit" Type="Self.Permit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Permit">
+              <PropertyRef Name="issuedBy_EO_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Permit__issuedTo__68487DD7">
+          <End Role="RE" Type="Self.RE" Multiplicity="1" />
+          <End Role="Permit" Type="Self.Permit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RE">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Permit">
+              <PropertyRef Name="issuedTo_RE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Permit__relatedT__693CA210">
+          <End Role="PermitRequest" Type="Self.PermitRequest" Multiplicity="1" />
+          <End Role="Permit" Type="Self.Permit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PermitRequest">
+              <PropertyRef Name="requestNo" />
+            </Principal>
+            <Dependent Role="Permit">
+              <PropertyRef Name="relatedTo_requestNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PermitReq__reque__5165187F">
+          <End Role="RE" Type="Self.RE" Multiplicity="1" />
+          <End Role="PermitRequest" Type="Self.PermitRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RE">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PermitRequest">
+              <PropertyRef Name="requestedBy_RE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PermitReq__reque__52593CB8">
+          <End Role="EnvironmentalPermits" Type="Self.EnvironmentalPermits" Multiplicity="1" />
+          <End Role="PermitRequest" Type="Self.PermitRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EnvironmentalPermits">
+              <PropertyRef Name="permitID" />
+            </Principal>
+            <Dependent Role="PermitRequest">
+              <PropertyRef Name="requestedPermit_permitID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RequestSt__Permi__5AEE82B9">
+          <End Role="PermitRequest" Type="Self.PermitRequest" Multiplicity="1" />
+          <End Role="RequestStatus" Type="Self.RequestStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PermitRequest">
+              <PropertyRef Name="requestNo" />
+            </Principal>
+            <Dependent Role="RequestStatus">
+              <PropertyRef Name="PermitRequest_requestNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RESite__RE_ID__4CA06362">
+          <End Role="RE" Type="Self.RE" Multiplicity="1" />
+          <End Role="RESite" Type="Self.RESite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RE">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RESite">
+              <PropertyRef Name="RE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Group5_iPERMITDBModelStoreContainer">
+          <EntitySet Name="Decision" EntityType="Self.Decision" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmailArchive" EntityType="Self.EmailArchive" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EnvironmentalPermits" EntityType="Self.EnvironmentalPermits" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EO" EntityType="Self.EO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OPS_CPP" EntityType="Self.OPS_CPP" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Payment" EntityType="Self.Payment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Permit" EntityType="Self.Permit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PermitRequest" EntityType="Self.PermitRequest" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RE" EntityType="Self.RE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RequestStatus" EntityType="Self.RequestStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RESite" EntityType="Self.RESite" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Decision__madeBy__571DF1D5" Association="Self.FK__Decision__madeBy__571DF1D5">
+            <End Role="EO" EntitySet="EO" />
+            <End Role="Decision" EntitySet="Decision" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Decision__relate__5812160E" Association="Self.FK__Decision__relate__5812160E">
+            <End Role="PermitRequest" EntitySet="PermitRequest" />
+            <End Role="Decision" EntitySet="Decision" />
+          </AssociationSet>
+          <AssociationSet Name="FK__EmailArch__sentT__5DCAEF64" Association="Self.FK__EmailArch__sentT__5DCAEF64">
+            <End Role="RE" EntitySet="RE" />
+            <End Role="EmailArchive" EntitySet="EmailArchive" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Payment__approve__6477ECF3" Association="Self.FK__Payment__approve__6477ECF3">
+            <End Role="OPS_CPP" EntitySet="OPS_CPP" />
+            <End Role="Payment" EntitySet="Payment" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Payment__PermitR__6383C8BA" Association="Self.FK__Payment__PermitR__6383C8BA">
+            <End Role="PermitRequest" EntitySet="PermitRequest" />
+            <End Role="Payment" EntitySet="Payment" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Permit__issuedBy__6754599E" Association="Self.FK__Permit__issuedBy__6754599E">
+            <End Role="EO" EntitySet="EO" />
+            <End Role="Permit" EntitySet="Permit" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Permit__issuedTo__68487DD7" Association="Self.FK__Permit__issuedTo__68487DD7">
+            <End Role="RE" EntitySet="RE" />
+            <End Role="Permit" EntitySet="Permit" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Permit__relatedT__693CA210" Association="Self.FK__Permit__relatedT__693CA210">
+            <End Role="PermitRequest" EntitySet="PermitRequest" />
+            <End Role="Permit" EntitySet="Permit" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PermitReq__reque__5165187F" Association="Self.FK__PermitReq__reque__5165187F">
+            <End Role="RE" EntitySet="RE" />
+            <End Role="PermitRequest" EntitySet="PermitRequest" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PermitReq__reque__52593CB8" Association="Self.FK__PermitReq__reque__52593CB8">
+            <End Role="EnvironmentalPermits" EntitySet="EnvironmentalPermits" />
+            <End Role="PermitRequest" EntitySet="PermitRequest" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RequestSt__Permi__5AEE82B9" Association="Self.FK__RequestSt__Permi__5AEE82B9">
+            <End Role="PermitRequest" EntitySet="PermitRequest" />
+            <End Role="RequestStatus" EntitySet="RequestStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RESite__RE_ID__4CA06362" Association="Self.FK__RESite__RE_ID__4CA06362">
+            <End Role="RE" EntitySet="RE" />
+            <End Role="RESite" EntitySet="RESite" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Group5_iPERMITDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Decision">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="dateOfDecision" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="finalDecision" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="madeBy_EO_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="relatedTo_requestNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="EO" Relationship="Self.FK__Decision__madeBy__571DF1D5" FromRole="Decision" ToRole="EO" />
+          <NavigationProperty Name="PermitRequest" Relationship="Self.FK__Decision__relate__5812160E" FromRole="Decision" ToRole="PermitRequest" />
+        </EntityType>
+        <EntityType Name="EmailArchive">
+          <Key>
+            <PropertyRef Name="emailID" />
+          </Key>
+          <Property Name="emailID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="emailDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="reason" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="sentTo_RE_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="sentBy_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="sentByType" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="RE" Relationship="Self.FK__EmailArch__sentT__5DCAEF64" FromRole="EmailArchive" ToRole="RE" />
+        </EntityType>
+        <EntityType Name="EnvironmentalPermits">
+          <Key>
+            <PropertyRef Name="permitID" />
+          </Key>
+          <Property Name="permitID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="permitName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="permitFee" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PermitRequest" Relationship="Self.FK__PermitReq__reque__52593CB8" FromRole="EnvironmentalPermits" ToRole="PermitRequest" />
+        </EntityType>
+        <EntityType Name="EO">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Decision" Relationship="Self.FK__Decision__madeBy__571DF1D5" FromRole="EO" ToRole="Decision" />
+          <NavigationProperty Name="Permit" Relationship="Self.FK__Permit__issuedBy__6754599E" FromRole="EO" ToRole="Permit" />
+        </EntityType>
+        <EntityType Name="OPS_CPP">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Payment" Relationship="Self.FK__Payment__approve__6477ECF3" FromRole="OPS_CPP" ToRole="Payment" />
+        </EntityType>
+        <EntityType Name="Payment">
+          <Key>
+            <PropertyRef Name="PaymentID" />
+          </Key>
+          <Property Name="PaymentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="paymentDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="paymentMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="isApproved" Type="Boolean" Nullable="false" />
+          <Property Name="PermitRequest_requestNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="approvedBy_OPS_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="OPS_CPP" Relationship="Self.FK__Payment__approve__6477ECF3" FromRole="Payment" ToRole="OPS_CPP" />
+          <NavigationProperty Name="PermitRequest" Relationship="Self.FK__Payment__PermitR__6383C8BA" FromRole="Payment" ToRole="PermitRequest" />
+        </EntityType>
+        <EntityType Name="Permit">
+          <Key>
+            <PropertyRef Name="PermitID" />
+          </Key>
+          <Property Name="PermitID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="issueDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="issuedBy_EO_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="issuedTo_RE_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="relatedTo_requestNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="EO" Relationship="Self.FK__Permit__issuedBy__6754599E" FromRole="Permit" ToRole="EO" />
+          <NavigationProperty Name="RE" Relationship="Self.FK__Permit__issuedTo__68487DD7" FromRole="Permit" ToRole="RE" />
+          <NavigationProperty Name="PermitRequest" Relationship="Self.FK__Permit__relatedT__693CA210" FromRole="Permit" ToRole="PermitRequest" />
+        </EntityType>
+        <EntityType Name="PermitRequest">
+          <Key>
+            <PropertyRef Name="requestNo" />
+          </Key>
+          <Property Name="requestNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="dateOfRequest" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="activityDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="activityStartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="activityDuration" Type="DateTime" Precision="3" />
+          <Property Name="permitFee" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="requestedBy_RE_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="requestedPermit_permitID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Decision" Relationship="Self.FK__Decision__relate__5812160E" FromRole="PermitRequest" ToRole="Decision" />
+          <NavigationProperty Name="EnvironmentalPermits" Relationship="Self.FK__PermitReq__reque__52593CB8" FromRole="PermitRequest" ToRole="EnvironmentalPermits" />
+          <NavigationProperty Name="Payment" Relationship="Self.FK__Payment__PermitR__6383C8BA" FromRole="PermitRequest" ToRole="Payment" />
+          <NavigationProperty Name="Permit" Relationship="Self.FK__Permit__relatedT__693CA210" FromRole="PermitRequest" ToRole="Permit" />
+          <NavigationProperty Name="RE" Relationship="Self.FK__PermitReq__reque__5165187F" FromRole="PermitRequest" ToRole="RE" />
+          <NavigationProperty Name="RequestStatus" Relationship="Self.FK__RequestSt__Permi__5AEE82B9" FromRole="PermitRequest" ToRole="RequestStatus" />
+        </EntityType>
+        <EntityType Name="RE">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="contactPersonName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="createdDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="organizationName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="organizationAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="EmailArchive" Relationship="Self.FK__EmailArch__sentT__5DCAEF64" FromRole="RE" ToRole="EmailArchive" />
+          <NavigationProperty Name="Permit" Relationship="Self.FK__Permit__issuedTo__68487DD7" FromRole="RE" ToRole="Permit" />
+          <NavigationProperty Name="PermitRequest" Relationship="Self.FK__PermitReq__reque__5165187F" FromRole="RE" ToRole="PermitRequest" />
+          <NavigationProperty Name="RESite" Relationship="Self.FK__RESite__RE_ID__4CA06362" FromRole="RE" ToRole="RESite" />
+        </EntityType>
+        <EntityType Name="RequestStatus">
+          <Key>
+            <PropertyRef Name="RequestStatusID" />
+          </Key>
+          <Property Name="RequestStatusID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="permitRequestStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="PermitRequest_requestNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="updatedBy_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="updatedByType" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PermitRequest" Relationship="Self.FK__RequestSt__Permi__5AEE82B9" FromRole="RequestStatus" ToRole="PermitRequest" />
+        </EntityType>
+        <EntityType Name="RESite">
+          <Key>
+            <PropertyRef Name="RESiteID" />
+          </Key>
+          <Property Name="RESiteID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RE_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="siteAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="siteContactPerson" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="RE" Relationship="Self.FK__RESite__RE_ID__4CA06362" FromRole="RESite" ToRole="RE" />
+        </EntityType>
+        <Association Name="FK__Decision__madeBy__571DF1D5">
+          <End Role="EO" Type="Self.EO" Multiplicity="1" />
+          <End Role="Decision" Type="Self.Decision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Decision">
+              <PropertyRef Name="madeBy_EO_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Decision__relate__5812160E">
+          <End Role="PermitRequest" Type="Self.PermitRequest" Multiplicity="1" />
+          <End Role="Decision" Type="Self.Decision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PermitRequest">
+              <PropertyRef Name="requestNo" />
+            </Principal>
+            <Dependent Role="Decision">
+              <PropertyRef Name="relatedTo_requestNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__EmailArch__sentT__5DCAEF64">
+          <End Role="RE" Type="Self.RE" Multiplicity="0..1" />
+          <End Role="EmailArchive" Type="Self.EmailArchive" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RE">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EmailArchive">
+              <PropertyRef Name="sentTo_RE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PermitReq__reque__52593CB8">
+          <End Role="EnvironmentalPermits" Type="Self.EnvironmentalPermits" Multiplicity="1" />
+          <End Role="PermitRequest" Type="Self.PermitRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EnvironmentalPermits">
+              <PropertyRef Name="permitID" />
+            </Principal>
+            <Dependent Role="PermitRequest">
+              <PropertyRef Name="requestedPermit_permitID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Permit__issuedBy__6754599E">
+          <End Role="EO" Type="Self.EO" Multiplicity="1" />
+          <End Role="Permit" Type="Self.Permit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Permit">
+              <PropertyRef Name="issuedBy_EO_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Payment__approve__6477ECF3">
+          <End Role="OPS_CPP" Type="Self.OPS_CPP" Multiplicity="0..1" />
+          <End Role="Payment" Type="Self.Payment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPS_CPP">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Payment">
+              <PropertyRef Name="approvedBy_OPS_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Payment__PermitR__6383C8BA">
+          <End Role="PermitRequest" Type="Self.PermitRequest" Multiplicity="1" />
+          <End Role="Payment" Type="Self.Payment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PermitRequest">
+              <PropertyRef Name="requestNo" />
+            </Principal>
+            <Dependent Role="Payment">
+              <PropertyRef Name="PermitRequest_requestNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Permit__issuedTo__68487DD7">
+          <End Role="RE" Type="Self.RE" Multiplicity="1" />
+          <End Role="Permit" Type="Self.Permit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RE">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Permit">
+              <PropertyRef Name="issuedTo_RE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Permit__relatedT__693CA210">
+          <End Role="PermitRequest" Type="Self.PermitRequest" Multiplicity="1" />
+          <End Role="Permit" Type="Self.Permit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PermitRequest">
+              <PropertyRef Name="requestNo" />
+            </Principal>
+            <Dependent Role="Permit">
+              <PropertyRef Name="relatedTo_requestNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PermitReq__reque__5165187F">
+          <End Role="RE" Type="Self.RE" Multiplicity="1" />
+          <End Role="PermitRequest" Type="Self.PermitRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RE">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PermitRequest">
+              <PropertyRef Name="requestedBy_RE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RequestSt__Permi__5AEE82B9">
+          <End Role="PermitRequest" Type="Self.PermitRequest" Multiplicity="1" />
+          <End Role="RequestStatus" Type="Self.RequestStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PermitRequest">
+              <PropertyRef Name="requestNo" />
+            </Principal>
+            <Dependent Role="RequestStatus">
+              <PropertyRef Name="PermitRequest_requestNo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RESite__RE_ID__4CA06362">
+          <End Role="RE" Type="Self.RE" Multiplicity="1" />
+          <End Role="RESite" Type="Self.RESite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RE">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RESite">
+              <PropertyRef Name="RE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Group5_iPERMITDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Decision" EntityType="Self.Decision" />
+          <EntitySet Name="EmailArchive" EntityType="Self.EmailArchive" />
+          <EntitySet Name="EnvironmentalPermits" EntityType="Self.EnvironmentalPermits" />
+          <EntitySet Name="EO" EntityType="Self.EO" />
+          <EntitySet Name="OPS_CPP" EntityType="Self.OPS_CPP" />
+          <EntitySet Name="Payment" EntityType="Self.Payment" />
+          <EntitySet Name="Permit" EntityType="Self.Permit" />
+          <EntitySet Name="PermitRequest" EntityType="Self.PermitRequest" />
+          <EntitySet Name="RE" EntityType="Self.RE" />
+          <EntitySet Name="RequestStatus" EntityType="Self.RequestStatus" />
+          <EntitySet Name="RESite" EntityType="Self.RESite" />
+          <AssociationSet Name="FK__Decision__madeBy__571DF1D5" Association="Self.FK__Decision__madeBy__571DF1D5">
+            <End Role="EO" EntitySet="EO" />
+            <End Role="Decision" EntitySet="Decision" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Decision__relate__5812160E" Association="Self.FK__Decision__relate__5812160E">
+            <End Role="PermitRequest" EntitySet="PermitRequest" />
+            <End Role="Decision" EntitySet="Decision" />
+          </AssociationSet>
+          <AssociationSet Name="FK__EmailArch__sentT__5DCAEF64" Association="Self.FK__EmailArch__sentT__5DCAEF64">
+            <End Role="RE" EntitySet="RE" />
+            <End Role="EmailArchive" EntitySet="EmailArchive" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PermitReq__reque__52593CB8" Association="Self.FK__PermitReq__reque__52593CB8">
+            <End Role="EnvironmentalPermits" EntitySet="EnvironmentalPermits" />
+            <End Role="PermitRequest" EntitySet="PermitRequest" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Permit__issuedBy__6754599E" Association="Self.FK__Permit__issuedBy__6754599E">
+            <End Role="EO" EntitySet="EO" />
+            <End Role="Permit" EntitySet="Permit" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Payment__approve__6477ECF3" Association="Self.FK__Payment__approve__6477ECF3">
+            <End Role="OPS_CPP" EntitySet="OPS_CPP" />
+            <End Role="Payment" EntitySet="Payment" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Payment__PermitR__6383C8BA" Association="Self.FK__Payment__PermitR__6383C8BA">
+            <End Role="PermitRequest" EntitySet="PermitRequest" />
+            <End Role="Payment" EntitySet="Payment" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Permit__issuedTo__68487DD7" Association="Self.FK__Permit__issuedTo__68487DD7">
+            <End Role="RE" EntitySet="RE" />
+            <End Role="Permit" EntitySet="Permit" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Permit__relatedT__693CA210" Association="Self.FK__Permit__relatedT__693CA210">
+            <End Role="PermitRequest" EntitySet="PermitRequest" />
+            <End Role="Permit" EntitySet="Permit" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PermitReq__reque__5165187F" Association="Self.FK__PermitReq__reque__5165187F">
+            <End Role="RE" EntitySet="RE" />
+            <End Role="PermitRequest" EntitySet="PermitRequest" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RequestSt__Permi__5AEE82B9" Association="Self.FK__RequestSt__Permi__5AEE82B9">
+            <End Role="PermitRequest" EntitySet="PermitRequest" />
+            <End Role="RequestStatus" EntitySet="RequestStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RESite__RE_ID__4CA06362" Association="Self.FK__RESite__RE_ID__4CA06362">
+            <End Role="RE" EntitySet="RE" />
+            <End Role="RESite" EntitySet="RESite" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Group5_iPERMITDBModelStoreContainer" CdmEntityContainer="Group5_iPERMITDBEntities">
+          <EntitySetMapping Name="Decision">
+            <EntityTypeMapping TypeName="Group5_iPERMITDBModel.Decision">
+              <MappingFragment StoreEntitySet="Decision">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="dateOfDecision" ColumnName="dateOfDecision" />
+                <ScalarProperty Name="finalDecision" ColumnName="finalDecision" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="madeBy_EO_ID" ColumnName="madeBy_EO_ID" />
+                <ScalarProperty Name="relatedTo_requestNo" ColumnName="relatedTo_requestNo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmailArchive">
+            <EntityTypeMapping TypeName="Group5_iPERMITDBModel.EmailArchive">
+              <MappingFragment StoreEntitySet="EmailArchive">
+                <ScalarProperty Name="emailID" ColumnName="emailID" />
+                <ScalarProperty Name="emailDate" ColumnName="emailDate" />
+                <ScalarProperty Name="reason" ColumnName="reason" />
+                <ScalarProperty Name="sentTo_RE_ID" ColumnName="sentTo_RE_ID" />
+                <ScalarProperty Name="sentBy_ID" ColumnName="sentBy_ID" />
+                <ScalarProperty Name="sentByType" ColumnName="sentByType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EnvironmentalPermits">
+            <EntityTypeMapping TypeName="Group5_iPERMITDBModel.EnvironmentalPermits">
+              <MappingFragment StoreEntitySet="EnvironmentalPermits">
+                <ScalarProperty Name="permitID" ColumnName="permitID" />
+                <ScalarProperty Name="permitName" ColumnName="permitName" />
+                <ScalarProperty Name="permitFee" ColumnName="permitFee" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EO">
+            <EntityTypeMapping TypeName="Group5_iPERMITDBModel.EO">
+              <MappingFragment StoreEntitySet="EO">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OPS_CPP">
+            <EntityTypeMapping TypeName="Group5_iPERMITDBModel.OPS_CPP">
+              <MappingFragment StoreEntitySet="OPS_CPP">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Payment">
+            <EntityTypeMapping TypeName="Group5_iPERMITDBModel.Payment">
+              <MappingFragment StoreEntitySet="Payment">
+                <ScalarProperty Name="PaymentID" ColumnName="PaymentID" />
+                <ScalarProperty Name="paymentDate" ColumnName="paymentDate" />
+                <ScalarProperty Name="paymentMethod" ColumnName="paymentMethod" />
+                <ScalarProperty Name="isApproved" ColumnName="isApproved" />
+                <ScalarProperty Name="PermitRequest_requestNo" ColumnName="PermitRequest_requestNo" />
+                <ScalarProperty Name="approvedBy_OPS_ID" ColumnName="approvedBy_OPS_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Permit">
+            <EntityTypeMapping TypeName="Group5_iPERMITDBModel.Permit">
+              <MappingFragment StoreEntitySet="Permit">
+                <ScalarProperty Name="PermitID" ColumnName="PermitID" />
+                <ScalarProperty Name="issueDate" ColumnName="issueDate" />
+                <ScalarProperty Name="issuedBy_EO_ID" ColumnName="issuedBy_EO_ID" />
+                <ScalarProperty Name="issuedTo_RE_ID" ColumnName="issuedTo_RE_ID" />
+                <ScalarProperty Name="relatedTo_requestNo" ColumnName="relatedTo_requestNo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PermitRequest">
+            <EntityTypeMapping TypeName="Group5_iPERMITDBModel.PermitRequest">
+              <MappingFragment StoreEntitySet="PermitRequest">
+                <ScalarProperty Name="requestNo" ColumnName="requestNo" />
+                <ScalarProperty Name="dateOfRequest" ColumnName="dateOfRequest" />
+                <ScalarProperty Name="activityDescription" ColumnName="activityDescription" />
+                <ScalarProperty Name="activityStartDate" ColumnName="activityStartDate" />
+                <ScalarProperty Name="activityDuration" ColumnName="activityDuration" />
+                <ScalarProperty Name="permitFee" ColumnName="permitFee" />
+                <ScalarProperty Name="requestedBy_RE_ID" ColumnName="requestedBy_RE_ID" />
+                <ScalarProperty Name="requestedPermit_permitID" ColumnName="requestedPermit_permitID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RE">
+            <EntityTypeMapping TypeName="Group5_iPERMITDBModel.RE">
+              <MappingFragment StoreEntitySet="RE">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="contactPersonName" ColumnName="contactPersonName" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="createdDate" ColumnName="createdDate" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="organizationName" ColumnName="organizationName" />
+                <ScalarProperty Name="organizationAddress" ColumnName="organizationAddress" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RequestStatus">
+            <EntityTypeMapping TypeName="Group5_iPERMITDBModel.RequestStatus">
+              <MappingFragment StoreEntitySet="RequestStatus">
+                <ScalarProperty Name="RequestStatusID" ColumnName="RequestStatusID" />
+                <ScalarProperty Name="permitRequestStatus" ColumnName="permitRequestStatus" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="PermitRequest_requestNo" ColumnName="PermitRequest_requestNo" />
+                <ScalarProperty Name="updatedBy_ID" ColumnName="updatedBy_ID" />
+                <ScalarProperty Name="updatedByType" ColumnName="updatedByType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RESite">
+            <EntityTypeMapping TypeName="Group5_iPERMITDBModel.RESite">
+              <MappingFragment StoreEntitySet="RESite">
+                <ScalarProperty Name="RESiteID" ColumnName="RESiteID" />
+                <ScalarProperty Name="RE_ID" ColumnName="RE_ID" />
+                <ScalarProperty Name="siteAddress" ColumnName="siteAddress" />
+                <ScalarProperty Name="siteContactPerson" ColumnName="siteContactPerson" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

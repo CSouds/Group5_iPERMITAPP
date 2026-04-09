@@ -1,0 +1,56 @@
+﻿@model iPERMIT_Group_5.Models.Permit
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Permit</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.issueDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.issueDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EO.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EO.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RE.contactPersonName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RE.contactPersonName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PermitRequest.activityDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PermitRequest.activityDescription)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

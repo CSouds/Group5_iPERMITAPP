@@ -1,0 +1,50 @@
+﻿@model iPERMIT_Group_5.Models.Permit
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Permit</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.issueDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.issueDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EO.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EO.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RE.contactPersonName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RE.contactPersonName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PermitRequest.activityDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PermitRequest.activityDescription)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PermitID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

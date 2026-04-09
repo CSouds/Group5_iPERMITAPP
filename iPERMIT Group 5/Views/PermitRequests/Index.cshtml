@@ -1,0 +1,69 @@
+﻿@model IEnumerable<iPERMIT_Group_5.Models.PermitRequest>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.dateOfRequest)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.activityDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.activityStartDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.activityDuration)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.permitFee)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EnvironmentalPermits.permitName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RE.contactPersonName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.dateOfRequest)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.activityDescription)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.activityStartDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.activityDuration)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.permitFee)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EnvironmentalPermits.permitName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RE.contactPersonName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.requestNo }) |
+            @Html.ActionLink("Details", "Details", new { id=item.requestNo }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.requestNo })
+        </td>
+    </tr>
+}
+
+</table>

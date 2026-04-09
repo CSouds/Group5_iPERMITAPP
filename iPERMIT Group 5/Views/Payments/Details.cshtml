@@ -1,0 +1,58 @@
+﻿@model iPERMIT_Group_5.Models.Payment
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Payment</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.paymentDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.paymentDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.paymentMethod)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.paymentMethod)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.isApproved)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.isApproved)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OPS_CPP.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OPS_CPP.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PermitRequest.activityDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PermitRequest.activityDescription)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PaymentID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
