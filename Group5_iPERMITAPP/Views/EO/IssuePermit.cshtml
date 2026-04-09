@@ -1,0 +1,63 @@
+@model PermitRequest
+@{
+    ViewData["Title"] = "Issue Permit";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card border-success">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="bi bi-award"></i> Issue Permit</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success">
+                    <i class="bi bi-check-circle"></i>
+                    Application <strong>@Model.RequestNo</strong> has been <strong>approved</strong>.
+                    Please fill in the permit details below to issue the official permit.
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Applicant:</strong> @Model.RequestedBy?.OrganizationName
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Permit Type:</strong> @Model.RequestedPermit?.PermitName
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Activity:</strong> @Model.ActivityDescription
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Start Date:</strong> @Model.ActivityStartDate.ToString("MMM dd, yyyy")
+                    </div>
+                </div>
+
+                <hr />
+
+                <form asp-action="ConfirmIssuePermit" method="post">
+                    <input type="hidden" name="requestNo" value="@Model.RequestNo" />
+
+                    <div class="mb-3">
+                        <label for="duration" class="form-label fw-bold">Permit Duration</label>
+                        <input type="text" name="duration" id="duration" class="form-control"
+                               value="@Model.ActivityDuration days" required
+                               placeholder="e.g., 365 days, 1 year" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label fw-bold">Permit Description</label>
+                        <textarea name="description" id="description" class="form-control" rows="4" required
+                                  placeholder="Official permit description and conditions...">Environmental permit for @Model.ActivityDescription. Permit type: @Model.RequestedPermit?.PermitName. Valid for @Model.ActivityDuration days from the date of issue.</textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="ReviewApplications" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="bi bi-award"></i> Issue Permit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

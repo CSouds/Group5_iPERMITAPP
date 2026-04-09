@@ -1,0 +1,50 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-box-arrow-in-right"></i> Login</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Sign in to your iPERMIT account (RE or EO).</p>
+
+                <form asp-action="Login" method="post">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="UserID" class="form-label"></label>
+                        <input asp-for="UserID" class="form-control" placeholder="Enter your User ID" autofocus />
+                        <span asp-validation-for="UserID" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label"></label>
+                        <input asp-for="Password" class="form-control" placeholder="Enter your password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </button>
+                    </div>
+                </form>
+
+                <hr />
+                <div class="text-center">
+                    <p>Don't have an account?
+                        <a asp-action="Register">Register as a Regulated Entity</a>
+                    </p>
+                </div>
+
+                <div class="alert alert-info mt-3">
+                    <small>
+                        <strong>EO Login:</strong> User ID: <code>EO001</code> | Default Password: <code>password</code>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

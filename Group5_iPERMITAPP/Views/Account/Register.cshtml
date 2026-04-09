@@ -1,0 +1,87 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-person-plus"></i> RE Registration</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Register your Regulated Entity (RE) account to apply for environmental permits.</p>
+
+                <form asp-action="Register" method="post">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <h5 class="border-bottom pb-2 mb-3">Account Information</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="ID" class="form-label"></label>
+                            <input asp-for="ID" class="form-control" placeholder="Enter a unique user ID" />
+                            <span asp-validation-for="ID" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" placeholder="email@example.com" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ConfirmPassword" class="form-label"></label>
+                            <input asp-for="ConfirmPassword" class="form-control" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <h5 class="border-bottom pb-2 mb-3 mt-4">Organization & Contact</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="ContactPersonName" class="form-label"></label>
+                            <input asp-for="ContactPersonName" class="form-control" placeholder="Full name" />
+                            <span asp-validation-for="ContactPersonName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="OrganizationName" class="form-label"></label>
+                            <input asp-for="OrganizationName" class="form-control" placeholder="Organization name" />
+                            <span asp-validation-for="OrganizationName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="OrganizationAddress" class="form-label"></label>
+                        <input asp-for="OrganizationAddress" class="form-control" placeholder="Full address" />
+                        <span asp-validation-for="OrganizationAddress" class="text-danger"></span>
+                    </div>
+
+                    <h5 class="border-bottom pb-2 mb-3 mt-4">Initial Activity Site</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="SiteAddress" class="form-label"></label>
+                            <input asp-for="SiteAddress" class="form-control" placeholder="Site address" />
+                            <span asp-validation-for="SiteAddress" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="SiteContactPerson" class="form-label"></label>
+                            <input asp-for="SiteContactPerson" class="form-control" placeholder="Contact at this site" />
+                            <span asp-validation-for="SiteContactPerson" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a asp-action="Login" class="btn btn-outline-secondary">Already have an account? Login</a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-person-plus"></i> Register
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,99 @@
+@{
+    ViewData["Title"] = "Home";
+}
+
+<!-- Hero Section -->
+<div class="hero-section rounded-3 mb-5">
+    <div class="container">
+        <h1><i class="bi bi-shield-check"></i> iPERMIT</h1>
+        <p class="lead mb-4">Ontario Environmental Permit Management System</p>
+        <p class="mb-4">Streamlining the environmental permit application process for Regulated Entities</p>
+        @if (string.IsNullOrEmpty(Context.Session.GetString("UserID")))
+        {
+            <a asp-controller="Account" asp-action="Register" class="btn btn-light btn-lg me-2">
+                <i class="bi bi-person-plus"></i> Register
+            </a>
+            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-light btn-lg">
+                <i class="bi bi-box-arrow-in-right"></i> Login
+            </a>
+        }
+        else if (Context.Session.GetString("UserRole") == "RE")
+        {
+            <a asp-controller="PermitRequest" asp-action="Dashboard" class="btn btn-light btn-lg">
+                <i class="bi bi-speedometer2"></i> Go to Dashboard
+            </a>
+        }
+        else
+        {
+            <a asp-controller="EO" asp-action="Dashboard" class="btn btn-light btn-lg">
+                <i class="bi bi-speedometer2"></i> Go to EO Dashboard
+            </a>
+        }
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card h-100 text-center p-4">
+            <div class="card-body">
+                <i class="bi bi-file-earmark-text display-4 text-primary mb-3"></i>
+                <h5 class="card-title">Apply for Permits</h5>
+                <p class="card-text">Submit environmental permit applications online through our streamlined process.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 text-center p-4">
+            <div class="card-body">
+                <i class="bi bi-credit-card display-4 text-success mb-3"></i>
+                <h5 class="card-title">Secure Payments</h5>
+                <p class="card-text">Pay application fees securely through the OPS Common Payment Portal.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 text-center p-4">
+            <div class="card-body">
+                <i class="bi bi-graph-up display-4 text-info mb-3"></i>
+                <h5 class="card-title">Track Status</h5>
+                <p class="card-text">Monitor your application status in real-time through your personal dashboard.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works -->
+<div class="card mb-5">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="bi bi-question-circle"></i> How It Works</h5>
+    </div>
+    <div class="card-body">
+        <div class="row text-center">
+            <div class="col-md-2">
+                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-2" style="width:50px;height:50px;">1</div>
+                <p class="small fw-bold">Register</p>
+            </div>
+            <div class="col-md-2">
+                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-2" style="width:50px;height:50px;">2</div>
+                <p class="small fw-bold">Apply</p>
+            </div>
+            <div class="col-md-2">
+                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-2" style="width:50px;height:50px;">3</div>
+                <p class="small fw-bold">Pay Fee</p>
+            </div>
+            <div class="col-md-2">
+                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-2" style="width:50px;height:50px;">4</div>
+                <p class="small fw-bold">Submit</p>
+            </div>
+            <div class="col-md-2">
+                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-2" style="width:50px;height:50px;">5</div>
+                <p class="small fw-bold">Review</p>
+            </div>
+            <div class="col-md-2">
+                <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mb-2" style="width:50px;height:50px;">6</div>
+                <p class="small fw-bold">Permit Issued</p>
+            </div>
+        </div>
+    </div>
+</div>
