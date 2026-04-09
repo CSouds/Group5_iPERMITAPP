@@ -55,6 +55,13 @@ main {
     border-radius: 20px;
     font-size: 0.85rem;
     font-weight: 500;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+/* Prevent wrapping in table action/status columns */
+.table .col-nowrap {
+    white-space: nowrap;
 }
 
 .status-pending-payment {
@@ -101,13 +108,19 @@ main {
 
 .stat-card .stat-label {
     font-size: 0.9rem;
-    color: #6c757d;
+    /* Inherit color from the card so text-white / text-dark on colored cards works correctly.
+       Falls back to gray only when no parent color is set. */
+    color: inherit;
+    opacity: 0.8;
 }
 
-/* Tables */
+/* Tables - light header only for tables that don't have their own dark/colored thead */
 .table th {
-    background-color: #f8f9fa;
     font-weight: 600;
+}
+
+.table thead:not(.table-dark):not(.table-primary):not(.table-secondary) th {
+    background-color: #f8f9fa;
 }
 
 /* Payment Form */

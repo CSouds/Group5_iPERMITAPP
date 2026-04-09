@@ -67,13 +67,13 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>Request No</th>
-                            <th>Date</th>
+                            <th class="col-nowrap">Request No</th>
+                            <th class="col-nowrap">Date</th>
                             <th>Permit Type</th>
                             <th>Activity</th>
-                            <th>Fee</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <th class="col-nowrap">Fee</th>
+                            <th class="col-nowrap">Status</th>
+                            <th class="col-nowrap">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -91,18 +91,22 @@
                                 _ => "bg-secondary text-white"
                             };
                             <tr>
-                                <td><strong>@pr.RequestNo</strong></td>
-                                <td>@pr.DateOfRequest.ToString("MMM dd, yyyy")</td>
+                                <td class="col-nowrap"><strong>@pr.RequestNo</strong></td>
+                                <td class="col-nowrap">@pr.DateOfRequest.ToString("MMM dd, yyyy")</td>
                                 <td>@pr.RequestedPermit?.PermitName</td>
                                 <td>@(pr.ActivityDescription.Length > 40 ? pr.ActivityDescription.Substring(0, 40) + "..." : pr.ActivityDescription)</td>
-                                <td>$@pr.PermitFee.ToString("F2")</td>
-                                <td><span class="status-badge @statusClass">@status</span></td>
-                                <td>
+                                <td class="col-nowrap">$@pr.PermitFee.ToString("F2")</td>
+                                <td class="col-nowrap"><span class="status-badge @statusClass">@status</span></td>
+                                <td class="col-nowrap">
                                     <a asp-action="Details" asp-route-id="@pr.RequestNo" class="btn btn-sm btn-outline-primary">
                                         <i class="bi bi-eye"></i> View
                                     </a>
                                     @if (status == "Pending Payment")
                                     {
+                                        <a asp-action="Edit" asp-route-id="@pr.RequestNo"
+                                           class="btn btn-sm btn-outline-warning">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </a>
                                         <a asp-controller="Payment" asp-action="Pay" asp-route-requestNo="@pr.RequestNo"
                                            class="btn btn-sm btn-warning">
                                             <i class="bi bi-credit-card"></i> Pay

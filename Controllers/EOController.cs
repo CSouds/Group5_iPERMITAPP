@@ -416,6 +416,78 @@ namespace Group5_iPERMITAPP.Controllers
         }
 
         // =====================================================
+        // CSV EXPORT - PENDING PERMITS
+        // =====================================================
+
+        /// <summary>
+        /// GET: Exports all pending permits (Submitted / Being Reviewed)
+        /// as a downloadable CSV file.
+        /// </summary>
+        public async Task<IActionResult> ExportPendingCsv()
+        {
+            if (!IsEOAuthenticated())
+                return RedirectToAction("Login", "Account");
+
+            var pendingRequests = await _context.PermitRequests
+                .Include(pr => pr.RequestedPermit)
+                .Include(pr => pr.RequestedBy)
+                .Include(pr => pr.Payment)
+                .Include(pr => pr.Statuses)
+                .ToListAsync();
+
+            // Filter to only Submitted / Being Reviewed (latest status)
+            var filtered = pendingRequests.Where(pr =>
+            {
+                var latest = pr.Statuses.OrderByDescending(s => s.Date).FirstOrDefault();
+                return latest?.PermitRequestStatus == "Submitted" ||
+                       latest?.PermitRequestStatus == "Being Reviewed";
+            }).OrderBy(pr => pr.DateOfRequest).ToList();
+
+            // Build CSV
+            var sb = new System.Text.StringBuilder();
+
+            // Header row
+            sb.AppendLine("Request No,Date of Request,Applicant Name,Organization,Email,Permit Type,Activity Description,Activity Start Date,Duration (Days),Fee ($),Payment Status,Current Status");
+
+            foreach (var pr in filtered)
+            {
+                var latestStatus = pr.Statuses.OrderByDescending(s => s.Date).FirstOrDefault()?.PermitRequestStatus ?? "";
+                var paymentStatus = (pr.Payment != null && pr.Payment.PaymentApproved) ? "Paid" : "Pending";
+
+                sb.AppendLine(string.Join(",", new[]
+                {
+                    CsvEscape(pr.RequestNo),
+                    CsvEscape(pr.DateOfRequest.ToString("yyyy-MM-dd")),
+                    CsvEscape(pr.RequestedBy?.ContactPersonName ?? ""),
+                    CsvEscape(pr.RequestedBy?.OrganizationName ?? ""),
+                    CsvEscape(pr.RequestedBy?.Email ?? ""),
+                    CsvEscape(pr.RequestedPermit?.PermitName ?? ""),
+                    CsvEscape(pr.ActivityDescription),
+                    CsvEscape(pr.ActivityStartDate.ToString("yyyy-MM-dd")),
+                    CsvEscape(pr.ActivityDuration.ToString()),
+                    CsvEscape(pr.PermitFee.ToString("F2")),
+                    CsvEscape(paymentStatus),
+                    CsvEscape(latestStatus)
+                }));
+            }
+
+            var fileName = $"Pending_Permits_{DateTime.Now:yyyyMMdd_HHmmss}.csv";
+            var bytes = System.Text.Encoding.UTF8.GetBytes(sb.ToString());
+
+            return File(bytes, "text/csv", fileName);
+        }
+
+        /// <summary>
+        /// Wraps a field value in quotes and escapes any internal quotes for CSV safety.
+        /// </summary>
+        private static string CsvEscape(string value)
+        {
+            if (value.Contains(',') || value.Contains('"') || value.Contains('\n'))
+                return $"\"{value.Replace("\"", "\"\"")}\"";
+            return value;
+        }
+
+        // =====================================================
         // VIEW ALL APPLICATIONS (for EO)
         // =====================================================
 

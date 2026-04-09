@@ -22,12 +22,12 @@
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
-                        <th>Email ID</th>
-                        <th>Date</th>
-                        <th>From</th>
+                        <th class="col-nowrap">Email ID</th>
+                        <th class="col-nowrap">Date</th>
+                        <th class="col-nowrap">From</th>
                         <th>To</th>
                         <th>Recipient Email</th>
-                        <th>Request No</th>
+                        <th class="col-nowrap">Request No</th>
                         <th>Reason</th>
                     </tr>
                 </thead>
@@ -37,12 +37,12 @@
                     {
                         <tr>
                             <td>@num</td>
-                            <td><small>@email.EmailID</small></td>
-                            <td>@email.EmailDate.ToString("MMM dd, yyyy HH:mm")</td>
-                            <td><span class="badge bg-primary">@email.SentBy</span></td>
+                            <td class="col-nowrap"><small>@email.EmailID</small></td>
+                            <td class="col-nowrap">@email.EmailDate.ToString("MMM dd, yyyy HH:mm")</td>
+                            <td class="col-nowrap"><span class="badge bg-primary">@email.SentBy</span></td>
                             <td>@email.SentTo</td>
-                            <td><small>@email.RecipientEmail</small></td>
-                            <td><strong>@email.PermitRequestNo</strong></td>
+                            <td>@email.RecipientEmail</td>
+                            <td class="col-nowrap"><strong>@email.PermitRequestNo</strong></td>
                             <td>@(email.Reason.Length > 60 ? email.Reason.Substring(0, 60) + "..." : email.Reason)</td>
                         </tr>
                         num++;

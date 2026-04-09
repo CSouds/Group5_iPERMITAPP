@@ -83,12 +83,12 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>Request No</th>
-                            <th>Date</th>
+                            <th class="col-nowrap">Request No</th>
+                            <th class="col-nowrap">Date</th>
                             <th>Applicant</th>
                             <th>Permit Type</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <th class="col-nowrap">Status</th>
+                            <th class="col-nowrap">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -106,12 +106,12 @@
                                 _ => "bg-secondary text-white"
                             };
                             <tr>
-                                <td><strong>@pr.RequestNo</strong></td>
-                                <td>@pr.DateOfRequest.ToString("MMM dd, yyyy")</td>
+                                <td class="col-nowrap"><strong>@pr.RequestNo</strong></td>
+                                <td class="col-nowrap">@pr.DateOfRequest.ToString("MMM dd, yyyy")</td>
                                 <td>@pr.RequestedBy?.OrganizationName</td>
                                 <td>@pr.RequestedPermit?.PermitName</td>
-                                <td><span class="status-badge @statusClass">@status</span></td>
-                                <td>
+                                <td class="col-nowrap"><span class="status-badge @statusClass">@status</span></td>
+                                <td class="col-nowrap">
                                     <a asp-controller="PermitRequest" asp-action="Details" asp-route-id="@pr.RequestNo"
                                        class="btn btn-sm btn-outline-primary">
                                         <i class="bi bi-eye"></i>

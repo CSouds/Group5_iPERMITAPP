@@ -212,6 +212,126 @@ namespace Group5_iPERMITAPP.Controllers
         }
 
         // =====================================================
+        // EDIT PERMIT REQUEST (Pending Payment only)
+        // =====================================================
+
+        /// <summary>
+        /// GET: Load the edit form for a permit request that hasn't been paid yet.
+        /// Only allowed while the status is "Pending Payment".
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id)
+        {
+            var userId = HttpContext.Session.GetString("UserID");
+            var role = HttpContext.Session.GetString("UserRole");
+
+            if (string.IsNullOrEmpty(userId) || role != "RE")
+                return RedirectToAction("Login", "Account");
+
+            var permitRequest = await _context.PermitRequests
+                .Include(pr => pr.Statuses)
+                .FirstOrDefaultAsync(pr => pr.RequestNo == id);
+
+            if (permitRequest == null) return NotFound();
+
+            // Only the owning RE can edit
+            if (permitRequest.REID != userId) return Forbid();
+
+            // Only editable while still "Pending Payment"
+            var latestStatus = permitRequest.Statuses
+                .OrderByDescending(s => s.Date)
+                .FirstOrDefault();
+
+            if (latestStatus?.PermitRequestStatus != "Pending Payment")
+            {
+                TempData["ErrorMessage"] = "This application can no longer be edited because payment has already been submitted.";
+                return RedirectToAction("Dashboard");
+            }
+
+            // Pre-populate the view model with existing values
+            var permits = await _context.EnvironmentalPermits.ToListAsync();
+            ViewBag.PermitTypes = new SelectList(permits, "PermitID", "PermitName", permitRequest.EnvironmentalPermitID);
+            var sites = await _context.RESites.Where(s => s.REID == userId).ToListAsync();
+            ViewBag.Sites = new SelectList(sites, "SiteID", "SiteAddress");
+            ViewBag.PermitFees = permits.ToDictionary(p => p.PermitID, p => p.PermitFee);
+            ViewBag.RequestNo = id;
+            ViewBag.CurrentFee = permitRequest.PermitFee;
+
+            var model = new PermitRequestViewModel
+            {
+                EnvironmentalPermitID = permitRequest.EnvironmentalPermitID,
+                ActivityDescription = permitRequest.ActivityDescription,
+                ActivityStartDate = permitRequest.ActivityStartDate,
+                ActivityDuration = permitRequest.ActivityDuration
+            };
+
+            return View(model);
+        }
+
+        /// <summary>
+        /// POST: Save edits to a "Pending Payment" permit request.
+        /// Updates all fields and recalculates the fee if the permit type changed.
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(string id, PermitRequestViewModel model)
+        {
+            var userId = HttpContext.Session.GetString("UserID");
+            if (string.IsNullOrEmpty(userId))
+                return RedirectToAction("Login", "Account");
+
+            var permitRequest = await _context.PermitRequests
+                .Include(pr => pr.Statuses)
+                .FirstOrDefaultAsync(pr => pr.RequestNo == id);
+
+            if (permitRequest == null) return NotFound();
+            if (permitRequest.REID != userId) return Forbid();
+
+            // Verify still "Pending Payment"
+            var latestStatus = permitRequest.Statuses
+                .OrderByDescending(s => s.Date)
+                .FirstOrDefault();
+
+            if (latestStatus?.PermitRequestStatus != "Pending Payment")
+            {
+                TempData["ErrorMessage"] = "This application can no longer be edited because payment has already been submitted.";
+                return RedirectToAction("Dashboard");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var permits2 = await _context.EnvironmentalPermits.ToListAsync();
+                ViewBag.PermitTypes = new SelectList(permits2, "PermitID", "PermitName", model.EnvironmentalPermitID);
+                var sites2 = await _context.RESites.Where(s => s.REID == userId).ToListAsync();
+                ViewBag.Sites = new SelectList(sites2, "SiteID", "SiteAddress", model.SiteID);
+                ViewBag.PermitFees = permits2.ToDictionary(p => p.PermitID, p => p.PermitFee);
+                ViewBag.RequestNo = id;
+                ViewBag.CurrentFee = permitRequest.PermitFee;
+                return View(model);
+            }
+
+            // Look up the (possibly changed) permit type to get the correct fee
+            var envPermit = await _context.EnvironmentalPermits.FindAsync(model.EnvironmentalPermitID);
+            if (envPermit == null)
+            {
+                ModelState.AddModelError("", "Selected permit type not found.");
+                return View(model);
+            }
+
+            // Apply updates
+            permitRequest.EnvironmentalPermitID = model.EnvironmentalPermitID;
+            permitRequest.ActivityDescription = model.ActivityDescription;
+            permitRequest.ActivityStartDate = model.ActivityStartDate;
+            permitRequest.ActivityDuration = model.ActivityDuration;
+            permitRequest.PermitFee = envPermit.PermitFee;
+
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Application {id} updated successfully. Please proceed to payment.";
+            return RedirectToAction("Pay", "Payment", new { requestNo = id });
+        }
+
+        // =====================================================
         // STATUS HISTORY
         // =====================================================
 
