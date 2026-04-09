@@ -162,7 +162,7 @@ namespace Group5_iPERMITAPP.Models.ViewModels
         public string FinalDecision { get; set; } = string.Empty; // "Approved" or "Rejected"
 
         [Display(Name = "Reason / Description")]
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; } // Optional - nullable so blank textarea doesn't cause DB constraint violation
     }
 
     /// <summary>

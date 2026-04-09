@@ -188,7 +188,7 @@ namespace Group5_iPERMITAPP.Controllers
                 ID = decisionId,
                 DateOfDecision = DateTime.Now,
                 FinalDecision = model.FinalDecision,
-                Description = model.Description,
+                Description = model.Description ?? string.Empty,
                 EOID = eoId,
                 PermitRequestNo = model.PermitRequestNo
             };
@@ -199,7 +199,7 @@ namespace Group5_iPERMITAPP.Controllers
             var statusText = model.FinalDecision == "Approved" ? "Approved" : "Rejected";
             var statusDesc = model.FinalDecision == "Approved"
                 ? "Application approved by the Environmental Officer."
-                : $"Application rejected. Reason: {model.Description}";
+                : $"Application rejected. Reason: {model.Description ?? "No reason provided"}";
 
             var newStatus = new RequestStatus
             {
@@ -259,7 +259,7 @@ namespace Group5_iPERMITAPP.Controllers
             {
                 EmailID = "EMAIL-DEC-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
                 EmailDate = DateTime.Now,
-                Reason = $"Your permit request {model.PermitRequestNo} has been {statusText.ToLower()}. {model.Description}",
+                Reason = $"Your permit request {model.PermitRequestNo} has been {statusText.ToLower()}. {model.Description ?? ""}".TrimEnd(),
                 SentBy = "EO",
                 SentTo = permitRequest.RequestedBy?.ContactPersonName ?? "RE",
                 RecipientEmail = permitRequest.RequestedBy?.Email ?? "",
