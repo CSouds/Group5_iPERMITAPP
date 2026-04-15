@@ -39,15 +39,15 @@
                     <input type="hidden" name="requestNo" value="@Model.RequestNo" />
 
                     <div class="mb-3">
-                        <label for="duration" class="form-label fw-bold">Permit Duration</label>
-                        <input type="text" name="duration" id="duration" class="form-control"
-                               value="@Model.ActivityDuration days" required
-                               placeholder="e.g., 365 days, 1 year" />
+                        <label for="durationInput" class="form-label fw-bold">Permit Duration (days)</label>
+                        <input type="number" id="durationInput" class="form-control"
+                               value="@Model.ActivityDuration" required min="1" />
+                        <input type="hidden" name="duration" id="durationHidden" value="@Model.ActivityDuration days" />
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label fw-bold">Permit Description</label>
                         <textarea name="description" id="description" class="form-control" rows="4" required
-                                  placeholder="Official permit description and conditions...">Environmental permit for @Model.ActivityDescription. Permit type: @Model.RequestedPermit?.PermitName. Valid for @Model.ActivityDuration days from the date of issue.</textarea>
+                                  placeholder="Official permit description and conditions...">Environmental permit for @(Model.ActivityDescription). Permit type: @(Model.RequestedPermit?.PermitName). Valid for @(Model.ActivityDuration) days from the date of issue.</textarea>
                     </div>
 
                     <div class="d-flex justify-content-end gap-2">
@@ -61,3 +61,20 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Keep hidden field and description in sync when the EO changes the duration
+        document.getElementById('durationInput').addEventListener('input', function () {
+            var days = this.value;
+            // Update the hidden field that actually gets submitted
+            document.getElementById('durationHidden').value = days + ' days';
+            // Update the description textarea to match
+            var desc = document.getElementById('description');
+            desc.value = desc.value.replace(
+                /Valid for .+? days from the date of issue/,
+                'Valid for ' + days + ' days from the date of issue'
+            );
+        });
+    </script>
+}

@@ -48,9 +48,13 @@ namespace Group5_iPERMITAPP.Controllers
 
             // Summary statistics
             ViewBag.TotalApplications = allRequests.Count;
-            ViewBag.TotalRevenue = allRequests
+
+            // Total revenue: only count fees from permits that have a confirmed payment
+            var paidRequests = allRequests
                 .Where(pr => pr.Payment != null && pr.Payment.PaymentApproved)
-                .Sum(pr => pr.PermitFee);
+                .ToList();
+            ViewBag.TotalRevenue = paidRequests.Any() ? paidRequests.Sum(pr => pr.PermitFee) : 0.0;
+            ViewBag.PaidCount = paidRequests.Count;
 
             var statusCounts = new Dictionary<string, int>();
             foreach (var request in allRequests)

@@ -10,12 +10,7 @@
         <p class="mb-4">Streamlining the environmental permit application process for Regulated Entities</p>
         @if (string.IsNullOrEmpty(Context.Session.GetString("UserID")))
         {
-            <a asp-controller="Account" asp-action="Register" class="btn btn-light btn-lg me-2">
-                <i class="bi bi-person-plus"></i> Register
-            </a>
-            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-light btn-lg">
-                <i class="bi bi-box-arrow-in-right"></i> Login
-            </a>
+            <p class="mt-2 opacity-75">Use the Login or Register buttons above to get started.</p>
         }
         else if (Context.Session.GetString("UserRole") == "RE")
         {

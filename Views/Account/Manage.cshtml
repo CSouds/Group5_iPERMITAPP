@@ -9,53 +9,100 @@
 <div class="row">
     <div class="col-md-8">
         <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Profile Information</h5>
+                <button type="button" class="btn btn-sm btn-light" id="editToggleBtn" onclick="toggleEditMode()">
+                    <i class="bi bi-pencil"></i> Edit Profile
+                </button>
             </div>
             <div class="card-body">
-                <form asp-action="Manage" method="post">
-                    <input type="hidden" asp-for="ID" />
-                    <input type="hidden" asp-for="Password" />
-                    <input type="hidden" asp-for="CreatedDate" />
-
+                <!-- READ-ONLY DISPLAY (shown by default) -->
+                <div id="profileDisplay">
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label fw-bold">User ID</label>
-                            <input class="form-control" value="@Model.ID" disabled />
+                            <p class="form-control-plaintext">@Model.ID</p>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-bold">Account Created</label>
-                            <input class="form-control" value="@Model.CreatedDate.ToString("MMM dd, yyyy")" disabled />
+                            <p class="form-control-plaintext">@Model.CreatedDate.ToString("MMM dd, yyyy")</p>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label asp-for="ContactPersonName" class="form-label fw-bold"></label>
-                            <input asp-for="ContactPersonName" class="form-control" />
+                            <label class="form-label fw-bold">Contact Person Name</label>
+                            <p class="form-control-plaintext">@Model.ContactPersonName</p>
                         </div>
                         <div class="col-md-6">
-                            <label asp-for="Email" class="form-label fw-bold"></label>
-                            <input asp-for="Email" class="form-control" />
+                            <label class="form-label fw-bold">Email Address</label>
+                            <p class="form-control-plaintext">@Model.Email</p>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label asp-for="OrganizationName" class="form-label fw-bold"></label>
-                            <input asp-for="OrganizationName" class="form-control" />
+                            <label class="form-label fw-bold">Organization Name</label>
+                            <p class="form-control-plaintext">@Model.OrganizationName</p>
                         </div>
                         <div class="col-md-6">
-                            <label asp-for="OrganizationAddress" class="form-label fw-bold"></label>
-                            <input asp-for="OrganizationAddress" class="form-control" />
+                            <label class="form-label fw-bold">Organization Address</label>
+                            <p class="form-control-plaintext">@Model.OrganizationAddress</p>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-check-circle"></i> Save Changes
-                    </button>
-                    <a asp-action="ChangePassword" class="btn btn-outline-secondary ms-2">
+                    <a asp-action="ChangePassword" class="btn btn-outline-secondary">
                         <i class="bi bi-key"></i> Change Password
                     </a>
-                </form>
+                </div>
+
+                <!-- EDITABLE FORM (hidden by default) -->
+                <div id="profileEdit" style="display: none;">
+                    <form asp-action="Manage" method="post">
+                        <input type="hidden" asp-for="ID" />
+                        <input type="hidden" asp-for="Password" />
+                        <input type="hidden" asp-for="CreatedDate" />
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">User ID</label>
+                                <input class="form-control" value="@Model.ID" disabled />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Account Created</label>
+                                <input class="form-control" value="@Model.CreatedDate.ToString("MMM dd, yyyy")" disabled />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="ContactPersonName" class="form-label fw-bold"></label>
+                                <input asp-for="ContactPersonName" class="form-control" />
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Email" class="form-label fw-bold"></label>
+                                <input asp-for="Email" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="OrganizationName" class="form-label fw-bold"></label>
+                                <input asp-for="OrganizationName" class="form-control" />
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="OrganizationAddress" class="form-label fw-bold"></label>
+                                <input asp-for="OrganizationAddress" class="form-control" />
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Save Changes
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary ms-2" onclick="toggleEditMode()">
+                            Cancel
+                        </button>
+                        <a asp-action="ChangePassword" class="btn btn-outline-secondary ms-2">
+                            <i class="bi bi-key"></i> Change Password
+                        </a>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -87,3 +134,22 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function toggleEditMode() {
+            var display = document.getElementById('profileDisplay');
+            var edit = document.getElementById('profileEdit');
+            var btn = document.getElementById('editToggleBtn');
+            if (edit.style.display === 'none') {
+                edit.style.display = 'block';
+                display.style.display = 'none';
+                btn.style.display = 'none';
+            } else {
+                edit.style.display = 'none';
+                display.style.display = 'block';
+                btn.style.display = 'inline-block';
+            }
+        }
+    </script>
+}

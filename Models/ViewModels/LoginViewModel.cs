@@ -106,7 +106,7 @@ namespace Group5_iPERMITAPP.Models.ViewModels
         [Required(ErrorMessage = "Activity start date is required")]
         [Display(Name = "Activity Start Date")]
         [DataType(DataType.Date)]
-        public DateTime ActivityStartDate { get; set; }
+        public DateTime ActivityStartDate { get; set; } = DateTime.Today;
 
         [Required(ErrorMessage = "Activity duration is required")]
         [Display(Name = "Activity Duration (days)")]
