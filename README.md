@@ -3,6 +3,7 @@
 **CS4320/7320 - Software Engineering I | Spring 2026**  
 **University of Missouri-Columbia**  
 **Project 2: iPERMIT Implementation**
+**Repository: https://github.com/CSouds/Group5_iPERMITAPP/tree/main**
 
 ---
 
@@ -11,7 +12,12 @@
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) (or later)
 - A web browser (Chrome, Edge, Firefox)
 
-## How to Run
+## How to Run Published Version
+
+1. Unzip the folder.
+2. Run the Group5_iPERMITAPP.exe
+
+## How to Run without Published Version
 
 ### Option 1: Command Line
 
