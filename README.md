@@ -14,7 +14,7 @@
 
 ## How to Run Published Version
 
-1. Unzip the folder.
+1. Unzip the Group5_iPERMITAPP_EXE.zip folder.
 2. Run the Group5_iPERMITAPP.exe
 
 ## How to Run without Published Version
