@@ -322,6 +322,15 @@ namespace Group5_iPERMITAPP.Controllers
 
             if (permitRequest == null) return NotFound();
 
+            // Update the permit request's duration if the EO changed it
+            // Parse the integer from the duration string (e.g. "30 days" -> 30)
+            var durationText = duration?.Trim() ?? "";
+            if (int.TryParse(durationText.Split(' ')[0], out int issuedDays) &&
+                issuedDays != permitRequest.ActivityDuration)
+            {
+                permitRequest.ActivityDuration = issuedDays;
+            }
+
             // Create the issued permit
             var permitId = "PRM-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-" +
                           new Random().Next(1000, 9999);

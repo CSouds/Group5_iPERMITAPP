@@ -137,5 +137,18 @@ main {
     .card {
         box-shadow: none;
         border: 1px solid #ddd;
+        break-inside: avoid;
+    }
+    /* Remove scrollable overflow so tables print fully */
+    .table-responsive {
+        overflow: visible !important;
+    }
+    .table {
+        font-size: 0.8rem;
+    }
+    /* Ensure page fits */
+    body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 }

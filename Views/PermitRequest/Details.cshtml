@@ -16,7 +16,12 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h3><i class="bi bi-file-earmark-text"></i> Request: @Model.RequestNo</h3>
-    <span class="status-badge @statusClass fs-5">@latestStatus</span>
+    <div>
+        <span class="status-badge @statusClass fs-5 me-2">@latestStatus</span>
+        <button class="btn btn-outline-primary no-print" onclick="window.print()">
+            <i class="bi bi-printer"></i> Print
+        </button>
+    </div>
 </div>
 
 <div class="row">
@@ -49,7 +54,13 @@
                 </div>
                 <div class="row mb-2">
                     <div class="col-md-4 fw-bold">Activity Duration:</div>
-                    <div class="col-md-8">@Model.ActivityDuration days</div>
+                    <div class="col-md-8">
+                        @Model.ActivityDuration days
+                        @if (Model.IssuedPermit != null && Model.IssuedPermit.Duration != $"{Model.ActivityDuration} days")
+                        {
+                            <span class="badge bg-info ms-2">Issued: @Model.IssuedPermit.Duration</span>
+                        }
+                    </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-md-4 fw-bold">Permit Fee:</div>
