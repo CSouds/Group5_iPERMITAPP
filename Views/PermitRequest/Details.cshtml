@@ -212,9 +212,18 @@
                     <i class="bi bi-credit-card"></i> Proceed to Payment
                 </a>
             }
-            <a asp-action="Dashboard" class="btn btn-outline-secondary w-100">
-                <i class="bi bi-arrow-left"></i> Back to Dashboard
-            </a>
+            @if (Context.Session.GetString("UserRole") == "EO")
+            {
+                <a asp-controller="EO" asp-action="Dashboard" class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            }
+            else
+            {
+                <a asp-controller="PermitRequest" asp-action="Dashboard" class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            }
         </div>
     </div>
 </div>
