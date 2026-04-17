@@ -12,12 +12,12 @@
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) (or later)
 - A web browser (Chrome, Edge, Firefox)
 
-## How to Run Published Version
+## How to Run Exe
 
 1. Unzip the Group5_iPERMITAPP_EXE.zip folder.
 2. Run the Group5_iPERMITAPP.exe
 
-## How to Run without Published Version
+## How to Run without Exe
 
 ### Option 1: Command Line
 
