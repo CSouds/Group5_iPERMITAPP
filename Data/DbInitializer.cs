@@ -23,7 +23,8 @@ namespace Group5_iPERMITAPP.Data
                 {
                     ID = "EO001",
                     Name = "Environmental Officer",
-                    Password = BCrypt.Net.BCrypt.HashPassword("password")
+                    Password = BCrypt.Net.BCrypt.HashPassword("password"),
+                    Email = "group5.cs4320@gmail.com"
                 };
                 context.EOs.Add(eo);
             }

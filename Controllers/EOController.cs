@@ -170,7 +170,9 @@ namespace Group5_iPERMITAPP.Controllers
             if (!IsEOAuthenticated())
                 return RedirectToAction("Login", "Account");
 
-            var eoId = HttpContext.Session.GetString("UserID")!;
+            var eoId = HttpContext.Session.GetString("UserID");
+            if (string.IsNullOrEmpty(eoId))
+                return RedirectToAction("Login", "Account");
 
             var permitRequest = await _context.PermitRequests
                 .Include(pr => pr.RequestedBy)
@@ -212,7 +214,24 @@ namespace Group5_iPERMITAPP.Controllers
 
             _context.RequestStatuses.Add(newStatus);
 
-            // ===== SEND EMAIL TO RE =====
+            // Archive the email
+            var emailArchive = new EmailArchive
+            {
+                EmailID = "EMAIL-DEC-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
+                EmailDate = DateTime.Now,
+                Reason = $"Your permit request {model.PermitRequestNo} has been {statusText.ToLower()}. {model.Description ?? ""}".TrimEnd(),
+                SentBy = "EO",
+                SentTo = permitRequest.RequestedBy?.ContactPersonName ?? "RE",
+                RecipientEmail = permitRequest.RequestedBy?.Email ?? "",
+                PermitRequestNo = model.PermitRequestNo
+            };
+
+            _context.EmailArchives.Add(emailArchive);
+
+            // Save all DB changes BEFORE sending emails
+            await _context.SaveChangesAsync();
+
+            // ===== SEND EMAIL TO RE (after successful DB save) =====
             if (permitRequest.RequestedBy != null)
             {
                 var decisionEmailBody = $@"
@@ -246,29 +265,17 @@ namespace Group5_iPERMITAPP.Controllers
     Ontario Ministry of Environment</p>
 </body>
 </html>";
-                await _emailService.SendEmailAsync(
-                    permitRequest.RequestedBy.Email,
-                    permitRequest.RequestedBy.ContactPersonName,
-                    $"Decision on Environmental Permit Application {model.PermitRequestNo}",
-                    decisionEmailBody
-                );
+                try
+                {
+                    await _emailService.SendEmailAsync(
+                        permitRequest.RequestedBy.Email,
+                        permitRequest.RequestedBy.ContactPersonName,
+                        $"Decision on Environmental Permit Application {model.PermitRequestNo}",
+                        decisionEmailBody
+                    );
+                }
+                catch { /* Email failure should not block the decision flow */ }
             }
-
-            // Archive the email
-            var emailArchive = new EmailArchive
-            {
-                EmailID = "EMAIL-DEC-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
-                EmailDate = DateTime.Now,
-                Reason = $"Your permit request {model.PermitRequestNo} has been {statusText.ToLower()}. {model.Description ?? ""}".TrimEnd(),
-                SentBy = "EO",
-                SentTo = permitRequest.RequestedBy?.ContactPersonName ?? "RE",
-                RecipientEmail = permitRequest.RequestedBy?.Email ?? "",
-                PermitRequestNo = model.PermitRequestNo
-            };
-
-            _context.EmailArchives.Add(emailArchive);
-
-            await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = $"Application {model.PermitRequestNo} has been {statusText.ToLower()}.";
 
@@ -313,7 +320,9 @@ namespace Group5_iPERMITAPP.Controllers
             if (!IsEOAuthenticated())
                 return RedirectToAction("Login", "Account");
 
-            var eoId = HttpContext.Session.GetString("UserID")!;
+            var eoId = HttpContext.Session.GetString("UserID");
+            if (string.IsNullOrEmpty(eoId))
+                return RedirectToAction("Login", "Account");
 
             var permitRequest = await _context.PermitRequests
                 .Include(pr => pr.RequestedBy)
@@ -360,7 +369,24 @@ namespace Group5_iPERMITAPP.Controllers
 
             _context.RequestStatuses.Add(issuedStatus);
 
-            // ===== SEND EMAIL TO RE =====
+            // Archive the email
+            var emailArchive = new EmailArchive
+            {
+                EmailID = "EMAIL-ISS-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
+                EmailDate = DateTime.Now,
+                Reason = $"Your environmental permit {permitId} has been issued for request {requestNo}.",
+                SentBy = "EO",
+                SentTo = permitRequest.RequestedBy?.ContactPersonName ?? "RE",
+                RecipientEmail = permitRequest.RequestedBy?.Email ?? "",
+                PermitRequestNo = requestNo
+            };
+
+            _context.EmailArchives.Add(emailArchive);
+
+            // Save all DB changes BEFORE sending emails
+            await _context.SaveChangesAsync();
+
+            // ===== SEND EMAIL TO RE (after successful DB save) =====
             if (permitRequest.RequestedBy != null)
             {
                 var permitEmailBody = $@"
@@ -396,29 +422,17 @@ namespace Group5_iPERMITAPP.Controllers
 </body>
 </html>";
 
-                await _emailService.SendEmailAsync(
-                    permitRequest.RequestedBy.Email,
-                    permitRequest.RequestedBy.ContactPersonName,
-                    $"Environmental Permit Issued: {permitId}",
-                    permitEmailBody
-                );
+                try
+                {
+                    await _emailService.SendEmailAsync(
+                        permitRequest.RequestedBy.Email,
+                        permitRequest.RequestedBy.ContactPersonName,
+                        $"Environmental Permit Issued: {permitId}",
+                        permitEmailBody
+                    );
+                }
+                catch { /* Email failure should not block the permit issuance flow */ }
             }
-
-            // Archive the email
-            var emailArchive = new EmailArchive
-            {
-                EmailID = "EMAIL-ISS-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
-                EmailDate = DateTime.Now,
-                Reason = $"Your environmental permit {permitId} has been issued for request {requestNo}.",
-                SentBy = "EO",
-                SentTo = permitRequest.RequestedBy?.ContactPersonName ?? "RE",
-                RecipientEmail = permitRequest.RequestedBy?.Email ?? "",
-                PermitRequestNo = requestNo
-            };
-
-            _context.EmailArchives.Add(emailArchive);
-
-            await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = $"Permit {permitId} issued successfully.";
             return RedirectToAction("ReviewApplications");
@@ -489,8 +503,9 @@ namespace Group5_iPERMITAPP.Controllers
         /// <summary>
         /// Wraps a field value in quotes and escapes any internal quotes for CSV safety.
         /// </summary>
-        private static string CsvEscape(string value)
+        private static string CsvEscape(string? value)
         {
+            if (string.IsNullOrEmpty(value)) return "";
             if (value.Contains(',') || value.Contains('"') || value.Contains('\n'))
                 return $"\"{value.Replace("\"", "\"\"")}\"";
             return value;

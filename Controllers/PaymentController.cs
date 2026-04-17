@@ -109,7 +109,9 @@ namespace Group5_iPERMITAPP.Controllers
                 PaymentID = paymentId,
                 PaymentDate = DateTime.Now,
                 PaymentMethod = model.PaymentMethod,
-                Last4DigitOfCard = model.CardNumber.Substring(model.CardNumber.Length - 4),
+                Last4DigitOfCard = model.CardNumber.Length >= 4
+                    ? model.CardNumber.Substring(model.CardNumber.Length - 4)
+                    : model.CardNumber,
                 CardHolderName = model.CardHolderName,
                 PaymentApproved = true,
                 PermitRequestNo = model.PermitRequestNo
@@ -129,7 +131,42 @@ namespace Group5_iPERMITAPP.Controllers
 
             _context.RequestStatuses.Add(submittedStatus);
 
-            // ===== SEND EMAILS =====
+            // Look up the EO's email from the database for archive and notification
+            var eo = await _context.EOs.FirstOrDefaultAsync();
+            var eoEmail = eo?.Email ?? "group5.cs4320@gmail.com";
+            var eoName = eo?.Name ?? "Environmental Officer";
+
+            // Create email archive entries for logging
+            var emailToEOArchive = new EmailArchive
+            {
+                EmailID = "EMAIL-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-EO",
+                EmailDate = DateTime.Now,
+                Reason = $"Payment confirmed for request {model.PermitRequestNo}. Application ready for review.",
+                SentBy = "OPS-CPP",
+                SentTo = "Environmental Officer",
+                RecipientEmail = eoEmail,
+                PermitRequestNo = model.PermitRequestNo
+            };
+
+            _context.EmailArchives.Add(emailToEOArchive);
+
+            var emailToREArchive = new EmailArchive
+            {
+                EmailID = "EMAIL-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-RE",
+                EmailDate = DateTime.Now,
+                Reason = $"Payment confirmed. Your application {model.PermitRequestNo} has been submitted for review.",
+                SentBy = "OPS-CPP",
+                SentTo = permitRequest.RequestedBy?.ContactPersonName ?? "RE",
+                RecipientEmail = permitRequest.RequestedBy?.Email ?? "",
+                PermitRequestNo = model.PermitRequestNo
+            };
+
+            _context.EmailArchives.Add(emailToREArchive);
+
+            // Save all DB changes BEFORE sending emails (so data is persisted even if email fails)
+            await _context.SaveChangesAsync();
+
+            // ===== SEND EMAILS (after successful DB save) =====
 
             // Send confirmation email to RE
             if (permitRequest.RequestedBy != null)
@@ -162,12 +199,16 @@ namespace Group5_iPERMITAPP.Controllers
 </body>
 </html>";
 
-                await _emailService.SendEmailAsync(
-                    permitRequest.RequestedBy.Email,
-                    permitRequest.RequestedBy.ContactPersonName,
-                    $"Payment Confirmation for iPERMIT Application {model.PermitRequestNo}",
-                    reEmailBody
-                );
+                try
+                {
+                    await _emailService.SendEmailAsync(
+                        permitRequest.RequestedBy.Email,
+                        permitRequest.RequestedBy.ContactPersonName,
+                        $"Payment Confirmation for iPERMIT Application {model.PermitRequestNo}",
+                        reEmailBody
+                    );
+                }
+                catch { /* Email failure should not block the payment flow */ }
             }
 
             // Send notification to EO (Acknowledge EO)
@@ -187,47 +228,22 @@ namespace Group5_iPERMITAPP.Controllers
         Date Submitted: {DateTime.Now:MMMM dd, yyyy}
     </div>
 
-    <p><a href='https://localhost:5001/EO/Review/{model.PermitRequestNo}' style='background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block;'>Review Application</a></p>
+    <p><a href='{Request.Scheme}://{Request.Host}/EO/Review/{model.PermitRequestNo}' style='background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block;'>Review Application</a></p>
 
     <p>Log in to the iPERMIT system to review and make a decision on this application.</p>
 </body>
 </html>";
 
-            await _emailService.SendEmailAsync(
-                "cosbdf@umsystem.edu",
-                "Environmental Officer",
-                $"New Application Ready for Review: {model.PermitRequestNo}",
-                eoEmailBody
-            );
-
-            // Create email archive entries for logging
-            var emailToEOArchive = new EmailArchive
+            try
             {
-                EmailID = "EMAIL-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-EO",
-                EmailDate = DateTime.Now,
-                Reason = $"Payment confirmed for request {model.PermitRequestNo}. Application ready for review.",
-                SentBy = "OPS-CPP",
-                SentTo = "Environmental Officer",
-                RecipientEmail = "eo@ministry.gov.on.ca",
-                PermitRequestNo = model.PermitRequestNo
-            };
-
-            _context.EmailArchives.Add(emailToEOArchive);
-
-            var emailToREArchive = new EmailArchive
-            {
-                EmailID = "EMAIL-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-RE",
-                EmailDate = DateTime.Now,
-                Reason = $"Payment confirmed. Your application {model.PermitRequestNo} has been submitted for review.",
-                SentBy = "OPS-CPP",
-                SentTo = permitRequest.RequestedBy?.ContactPersonName ?? "RE",
-                RecipientEmail = permitRequest.RequestedBy?.Email ?? "",
-                PermitRequestNo = model.PermitRequestNo
-            };
-
-            _context.EmailArchives.Add(emailToREArchive);
-
-            await _context.SaveChangesAsync();
+                await _emailService.SendEmailAsync(
+                    eoEmail,
+                    eoName,
+                    $"New Application Ready for Review: {model.PermitRequestNo}",
+                    eoEmailBody
+                );
+            }
+            catch { /* Email failure should not block the payment flow */ }
 
             return RedirectToAction("Success", new { requestNo = model.PermitRequestNo, paymentId = paymentId });
         }

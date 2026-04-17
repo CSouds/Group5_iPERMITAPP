@@ -43,7 +43,7 @@
                             <td>@email.SentTo</td>
                             <td>@email.RecipientEmail</td>
                             <td class="col-nowrap"><strong>@email.PermitRequestNo</strong></td>
-                            <td>@(email.Reason.Length > 60 ? email.Reason.Substring(0, 60) + "..." : email.Reason)</td>
+                            <td>@(email.Reason != null && email.Reason.Length > 60 ? email.Reason.Substring(0, 60) + "..." : email.Reason)</td>
                         </tr>
                         num++;
                     }

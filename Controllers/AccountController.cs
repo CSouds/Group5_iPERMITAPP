@@ -123,6 +123,7 @@ namespace Group5_iPERMITAPP.Controllers
                 HttpContext.Session.SetString("UserID", eo.ID);
                 HttpContext.Session.SetString("UserName", eo.Name);
                 HttpContext.Session.SetString("UserRole", "EO");
+                HttpContext.Session.SetString("UserEmail", eo.Email);
                 return RedirectToAction("Dashboard", "EO");
             }
 
@@ -195,6 +196,14 @@ namespace Group5_iPERMITAPP.Controllers
 
             var re = await _context.REs.FindAsync(userId);
             if (re == null) return RedirectToAction("Login");
+
+            // Check if the new email is already used by another RE
+            if (re.Email != model.Email &&
+                await _context.REs.AnyAsync(r => r.Email == model.Email && r.ID != userId))
+            {
+                TempData["ErrorMessage"] = "That email address is already registered to another account.";
+                return RedirectToAction("Manage");
+            }
 
             re.ContactPersonName = model.ContactPersonName;
             re.Email = model.Email;

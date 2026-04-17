@@ -100,7 +100,7 @@
                             <td>@pr.RequestedBy?.OrganizationName</td>
                             <td>@pr.RequestedBy?.ContactPersonName</td>
                             <td>@pr.RequestedPermit?.PermitName</td>
-                            <td>@(pr.ActivityDescription.Length > 30 ? pr.ActivityDescription.Substring(0, 30) + "..." : pr.ActivityDescription)</td>
+                            <td>@(pr.ActivityDescription != null && pr.ActivityDescription.Length > 30 ? pr.ActivityDescription.Substring(0, 30) + "..." : pr.ActivityDescription)</td>
                             <td class="col-nowrap">$@pr.PermitFee.ToString("F2")</td>
                             <td class="col-nowrap">
                                 @if (pr.Payment != null && pr.Payment.PaymentApproved)
